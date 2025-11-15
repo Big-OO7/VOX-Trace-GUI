@@ -41,3 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 trace-viewer/public/data/om-trace-zesty.csv
+@trace-viewer/public/data/om-trace-zesty.csv
