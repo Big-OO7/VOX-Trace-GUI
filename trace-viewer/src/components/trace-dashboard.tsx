@@ -133,10 +133,13 @@ const TimelineItem = ({
   </div>
 );
 
-const StoreCard = ({ store }: { store: TraceStore }) => {
+const StoreCard = ({ store, onDoubleClick }: { store: TraceStore; onDoubleClick?: (store: TraceStore) => void }) => {
   const primaryItems = (store.menu_items ?? []).slice(0, 3);
   return (
-    <div className="rounded-lg border border-black/10 bg-white p-5 transition hover:border-black/30">
+    <div
+      className="rounded-lg border border-black/10 bg-white p-5 transition hover:border-black/30 cursor-pointer"
+      onDoubleClick={() => onDoubleClick?.(store)}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           <p className="font-semibold text-black">
@@ -194,6 +197,124 @@ const EmptyState = ({ message }: { message: string }) => (
   </div>
 );
 
+const StoreDetailModal = ({
+  store,
+  onClose,
+}: {
+  store: TraceStore;
+  onClose: () => void;
+}) => {
+  const allMenuItems = store.menu_items ?? [];
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-white shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-black/10 bg-white p-6">
+          <div>
+            <h2 className="text-2xl font-bold text-black">
+              {store.store_name ?? "Unnamed Store"}
+            </h2>
+            {store.cuisine && (
+              <p className="mt-1 text-black/60">{store.cuisine}</p>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            className="rounded-lg p-2 transition hover:bg-black/5"
+            aria-label="Close"
+          >
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {/* Store Details Grid */}
+          <div className="grid grid-cols-2 gap-4 rounded-lg border border-black/10 bg-black/[0.02] p-4">
+            <div>
+              <dt className="text-sm font-medium text-black/50">Business ID</dt>
+              <dd className="mt-1 text-black">{store.business_id ?? "—"}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium text-black/50">ETA</dt>
+              <dd className="mt-1 text-black">{store.eta_minutes ?? "—"} min</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium text-black/50">Distance</dt>
+              <dd className="mt-1 text-black">
+                {store.distance_miles
+                  ? `${Number(store.distance_miles).toFixed(2)} mi`
+                  : "—"}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium text-black/50">Dietary Options</dt>
+              <dd className="mt-1 text-black">
+                {store.dietary_options ?? "Standard"}
+              </dd>
+            </div>
+            {store.address && (
+              <div className="col-span-2">
+                <dt className="text-sm font-medium text-black/50">Address</dt>
+                <dd className="mt-1 text-black">{store.address}</dd>
+              </div>
+            )}
+          </div>
+
+          {/* Full Menu Items */}
+          {allMenuItems.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold text-black mb-3">
+                Full Menu ({allMenuItems.length} items)
+              </h3>
+              <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
+                <ul className="grid gap-2 sm:grid-cols-2">
+                  {allMenuItems.map((item, idx) => (
+                    <li
+                      key={`${store.business_id}-menu-${idx}`}
+                      className="text-sm text-black/80"
+                    >
+                      • {inferMenuItemName(item)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {/* Raw Store Data */}
+          <details className="rounded-lg border border-black/10">
+            <summary className="cursor-pointer p-4 font-medium text-black hover:bg-black/[0.02]">
+              View Raw Store Data
+            </summary>
+            <div className="border-t border-black/10 p-4">
+              <pre className="overflow-x-auto text-xs text-black/70">
+                {JSON.stringify(store, null, 2)}
+              </pre>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const TraceDashboard = () => {
   const [records, setRecords] = useState<TraceRecord[]>([]);
   const [selectedId, setSelectedId] = useState<string>();
@@ -203,6 +324,7 @@ const TraceDashboard = () => {
   const [sourceLabel, setSourceLabel] = useState("Loading demo data…");
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [selectedStoreDetail, setSelectedStoreDetail] = useState<TraceStore | null>(null);
 
   const parseCsv = useCallback(
     (text: string, label: string) => {
@@ -738,7 +860,10 @@ const TraceDashboard = () => {
                                       <div className="flex gap-4 pb-2" style={{ minWidth: 'min-content' }}>
                                         {(carousel.stores ?? []).map((store, storeIdx) => (
                                           <div key={`${traceIdx}-${carIdx}-${storeIdx}-${store.business_id}`} className="w-80 flex-shrink-0">
-                                            <StoreCard store={store} />
+                                            <StoreCard
+                                              store={store}
+                                              onDoubleClick={setSelectedStoreDetail}
+                                            />
                                           </div>
                                         ))}
                                       </div>
@@ -806,7 +931,10 @@ const TraceDashboard = () => {
                                   <div className="flex gap-4 pb-2" style={{ minWidth: 'min-content' }}>
                                     {(carousel.stores ?? []).map((store, storeIdx) => (
                                       <div key={`${carIdx}-${storeIdx}-${store.business_id}`} className="w-80 flex-shrink-0">
-                                        <StoreCard store={store} />
+                                        <StoreCard
+                                          store={store}
+                                          onDoubleClick={setSelectedStoreDetail}
+                                        />
                                       </div>
                                     ))}
                                   </div>
@@ -825,6 +953,14 @@ const TraceDashboard = () => {
           )}
         </div>
       </div>
+
+      {/* Store Detail Modal */}
+      {selectedStoreDetail && (
+        <StoreDetailModal
+          store={selectedStoreDetail}
+          onClose={() => setSelectedStoreDetail(null)}
+        />
+      )}
     </div>
   );
 };
