@@ -1,0 +1,6 @@
+# Large CSV files
+VOX__Metis_100_FullTraces.csv
+*.csv
+
+# OS files
+.DS_Store
