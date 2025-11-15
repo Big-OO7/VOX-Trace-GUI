@@ -40,4 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-*.csv
+trace-viewer/public/data/om-trace-zesty.csv
