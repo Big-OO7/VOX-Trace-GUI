@@ -40,4 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-2025-11-14 6_30pm.csv
+*.csv
