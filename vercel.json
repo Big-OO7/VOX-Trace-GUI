@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "cd trace-viewer && npm install && npm run build",
+  "outputDirectory": "trace-viewer/.next",
+  "installCommand": "npm install --prefix trace-viewer"
+}

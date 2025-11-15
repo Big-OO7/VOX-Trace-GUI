@@ -138,31 +138,32 @@ const hydratePayload = (payload: ConversationPayload): ConversationPayload => {
 };
 
 export const buildTraceRecords = (rows: CsvRow[]): TraceRecord[] => {
-  return rows
-    .map((row) => {
-      if (!row.CONVERSATION_ID || !row.CONVERSATION_JSON) return null;
-      try {
-        const rawPayload = JSON.parse(row.CONVERSATION_JSON) as ConversationPayload;
-        const payload = hydratePayload(rawPayload);
-        const derivedCount =
-          typeof row.TRACE_COUNT !== "undefined" && row.TRACE_COUNT !== ""
-            ? Number(row.TRACE_COUNT)
-            : payload.trace_count ?? payload.traces?.length ?? 0;
-        const traceCount = Number.isFinite(derivedCount) ? Number(derivedCount) : 0;
+  const results: TraceRecord[] = [];
 
-        return {
-          conversationId: row.CONVERSATION_ID,
-          traceCount,
-          payload: {
-            ...payload,
-            trace_count: payload.trace_count ?? traceCount,
-          },
-        } satisfies TraceRecord;
-      } catch (error) {
-        console.error("Failed to parse conversation JSON", error);
-        return null;
-      }
-    })
-    .filter((record): record is TraceRecord => Boolean(record));
+  for (const row of rows) {
+    if (!row.CONVERSATION_ID || !row.CONVERSATION_JSON) continue;
+    try {
+      const rawPayload = JSON.parse(row.CONVERSATION_JSON) as ConversationPayload;
+      const payload = hydratePayload(rawPayload);
+      const derivedCount =
+        typeof row.TRACE_COUNT !== "undefined" && row.TRACE_COUNT !== ""
+          ? Number(row.TRACE_COUNT)
+          : payload.trace_count ?? payload.traces?.length ?? 0;
+      const traceCount = Number.isFinite(derivedCount) ? Number(derivedCount) : 0;
+
+      results.push({
+        conversationId: row.CONVERSATION_ID,
+        traceCount,
+        payload: {
+          ...payload,
+          trace_count: payload.trace_count ?? traceCount,
+        },
+      });
+    } catch (error) {
+      console.error("Failed to parse conversation JSON", error);
+    }
+  }
+
+  return results;
 };
 

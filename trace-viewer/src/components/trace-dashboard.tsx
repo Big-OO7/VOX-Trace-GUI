@@ -17,6 +17,7 @@ import type {
   TraceDetail,
   TraceRecord,
   TraceStore,
+  TraceStoreMenuItem,
 } from "@/lib/trace-utils";
 import { buildTraceRecords } from "@/lib/trace-utils";
 
@@ -71,7 +72,7 @@ const getRangeLabel = (
   return `${formatter.format(min)} → ${formatter.format(max)}`;
 };
 
-const inferMenuItemName = (item: TraceStore["menu_items"][number]) => {
+const inferMenuItemName = (item: TraceStoreMenuItem) => {
   if (!item) return "Menu item";
   if (
     typeof item.profile === "object" &&
@@ -591,14 +592,14 @@ const TraceDashboard = () => {
                             {friendlyDaypart(key)}
                           </p>
                           <p className="mt-1 text-xs text-black/50">
-                            {detail.cuisine_preferences ?? "—"}
+                            {detail.cuisine_preferences ? String(detail.cuisine_preferences) : "—"}
                           </p>
                           <p className="mt-2 text-sm text-black/80">
-                            {detail.food_preferences ?? "No data"}
+                            {detail.food_preferences ? String(detail.food_preferences) : "No data"}
                           </p>
-                          {detail.lifestyle_summary && (
+                          {Boolean(detail.lifestyle_summary) && (
                             <p className="mt-2 text-xs text-black/50">
-                              {detail.lifestyle_summary}
+                              {String(detail.lifestyle_summary)}
                             </p>
                           )}
                         </div>
@@ -653,7 +654,7 @@ const TraceDashboard = () => {
                       >
                         {showAllTraces ? "Single View" : "All Traces"}
                       </button>
-                      {!showAllTraces && selectedRecord.payload.traces.map((trace, index) => (
+                      {!showAllTraces && selectedRecord.payload.traces.map((_trace, index) => (
                         <button
                           key={`trace-pill-${index}`}
                           onClick={() => setActiveTraceIndex(index)}
@@ -748,7 +749,7 @@ const TraceDashboard = () => {
                           )}
 
                           {/* Divider between traces */}
-                          {traceIdx < selectedRecord.payload.traces.length - 1 && (
+                          {selectedRecord.payload.traces && traceIdx < selectedRecord.payload.traces.length - 1 && (
                             <div className="mt-8 flex items-center gap-3 text-xs font-medium uppercase tracking-wider text-black/30">
                               <div className="h-px flex-1 bg-black/10" />
                               <span>Follow-up Trace</span>
