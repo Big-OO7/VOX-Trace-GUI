@@ -57,7 +57,13 @@ export default function Home() {
           </div>
         </header>
 
-        {activeTab === "traces" ? <TraceDashboard /> : <EvalResultsViewer />}
+        {/* Keep both components mounted but hide inactive one to preserve state */}
+        <div className={activeTab === "traces" ? "block" : "hidden"}>
+          <TraceDashboard />
+        </div>
+        <div className={activeTab === "results" ? "block" : "hidden"}>
+          <EvalResultsViewer />
+        </div>
       </main>
     </div>
   );
