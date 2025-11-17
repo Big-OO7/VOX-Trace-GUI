@@ -1,4 +1,3 @@
 # Exclude large CSV files from Vercel deployment
 public/data/*.csv
-public/data/
 *.csv
