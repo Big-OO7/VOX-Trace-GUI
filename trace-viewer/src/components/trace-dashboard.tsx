@@ -189,10 +189,10 @@ const StoreCard = ({ store, onDoubleClick }: { store: TraceStore; onDoubleClick?
 
 const EmptyState = ({ message }: { message: string }) => (
   <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-black/20 bg-black/[0.02] px-6 py-16 text-center">
-    <AlertCircle className="h-10 w-10 text-black/30" />
+    <Upload className="h-10 w-10 text-black/30" />
     <p className="mt-4 text-lg font-semibold text-black/80">{message}</p>
     <p className="mt-2 max-w-md text-sm text-black/50">
-      Upload a CSV export from your trace pipeline or reset to the demo data.
+      Upload a CSV export from your trace pipeline to view conversations and recommendations.
     </p>
   </div>
 );
@@ -356,15 +356,17 @@ const TraceDashboard = () => {
     try {
       const response = await fetch("/data/om-trace-zesty.csv");
       if (!response.ok) {
-        throw new Error("Unable to fetch the demo CSV.");
+        // Demo CSV not available, just show upload prompt
+        setSourceLabel("No data loaded");
+        setIsLoading(false);
+        return;
       }
       const text = await response.text();
       parseCsv(text, "om-trace-zesty.csv");
     } catch (error) {
       console.error(error);
-      setErrorMessage(
-        error instanceof Error ? error.message : "Failed to load CSV data.",
-      );
+      // Don't show error, just indicate no data loaded
+      setSourceLabel("No data loaded");
     } finally {
       setIsLoading(false);
     }
@@ -496,24 +498,10 @@ const TraceDashboard = () => {
           />
           <label
             htmlFor="trace-upload"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-black/10 bg-white px-4 py-2 text-sm font-medium text-black transition hover:bg-black hover:text-white"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition hover:bg-black/80"
           >
             <Upload className="h-4 w-4" /> Upload CSV
           </label>
-          <button
-            type="button"
-            onClick={loadDemo}
-            className="inline-flex items-center gap-2 rounded-lg border border-black/10 bg-white px-4 py-2 text-sm font-medium text-black transition hover:bg-black hover:text-white"
-          >
-            <RefreshCw className="h-4 w-4" /> Reset Demo
-          </button>
-          <a
-            href="/data/om-trace-zesty.csv"
-            download
-            className="inline-flex items-center gap-2 rounded-lg border border-black/10 bg-white px-4 py-2 text-sm font-medium text-black transition hover:bg-black hover:text-white"
-          >
-            <FileDown className="h-4 w-4" /> Download Sample
-          </a>
         </div>
       </div>
 
