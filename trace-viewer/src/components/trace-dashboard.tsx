@@ -354,15 +354,16 @@ const TraceDashboard = () => {
   const loadDemo = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/data/om-trace-zesty.csv");
+      // Try to load sample JSON traces first
+      const response = await fetch("/data/sample_traces.json");
       if (!response.ok) {
-        // Demo CSV not available, just show upload prompt
+        // No sample data available, just show upload prompt
         setSourceLabel("No data loaded");
         setIsLoading(false);
         return;
       }
       const text = await response.text();
-      parseCsv(text, "om-trace-zesty.csv");
+      parseJson(text, "sample_traces.json (3 conversations)");
     } catch (error) {
       console.error(error);
       // Don't show error, just indicate no data loaded
@@ -370,7 +371,7 @@ const TraceDashboard = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [parseCsv]);
+  }, [parseJson]);
 
   useEffect(() => {
     loadDemo();
