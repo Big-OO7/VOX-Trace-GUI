@@ -1,0 +1,648 @@
+{
+  "total_conversations": 100,
+  "chunk_size": 5,
+  "chunks": [
+    {
+      "index": 0,
+      "filename": "traces_chunk_0.json",
+      "start": 0,
+      "end": 5,
+      "count": 5
+    },
+    {
+      "index": 1,
+      "filename": "traces_chunk_1.json",
+      "start": 5,
+      "end": 10,
+      "count": 5
+    },
+    {
+      "index": 2,
+      "filename": "traces_chunk_2.json",
+      "start": 10,
+      "end": 15,
+      "count": 5
+    },
+    {
+      "index": 3,
+      "filename": "traces_chunk_3.json",
+      "start": 15,
+      "end": 20,
+      "count": 5
+    },
+    {
+      "index": 4,
+      "filename": "traces_chunk_4.json",
+      "start": 20,
+      "end": 25,
+      "count": 5
+    },
+    {
+      "index": 5,
+      "filename": "traces_chunk_5.json",
+      "start": 25,
+      "end": 30,
+      "count": 5
+    },
+    {
+      "index": 6,
+      "filename": "traces_chunk_6.json",
+      "start": 30,
+      "end": 35,
+      "count": 5
+    },
+    {
+      "index": 7,
+      "filename": "traces_chunk_7.json",
+      "start": 35,
+      "end": 40,
+      "count": 5
+    },
+    {
+      "index": 8,
+      "filename": "traces_chunk_8.json",
+      "start": 40,
+      "end": 45,
+      "count": 5
+    },
+    {
+      "index": 9,
+      "filename": "traces_chunk_9.json",
+      "start": 45,
+      "end": 50,
+      "count": 5
+    },
+    {
+      "index": 10,
+      "filename": "traces_chunk_10.json",
+      "start": 50,
+      "end": 55,
+      "count": 5
+    },
+    {
+      "index": 11,
+      "filename": "traces_chunk_11.json",
+      "start": 55,
+      "end": 60,
+      "count": 5
+    },
+    {
+      "index": 12,
+      "filename": "traces_chunk_12.json",
+      "start": 60,
+      "end": 65,
+      "count": 5
+    },
+    {
+      "index": 13,
+      "filename": "traces_chunk_13.json",
+      "start": 65,
+      "end": 70,
+      "count": 5
+    },
+    {
+      "index": 14,
+      "filename": "traces_chunk_14.json",
+      "start": 70,
+      "end": 75,
+      "count": 5
+    },
+    {
+      "index": 15,
+      "filename": "traces_chunk_15.json",
+      "start": 75,
+      "end": 80,
+      "count": 5
+    },
+    {
+      "index": 16,
+      "filename": "traces_chunk_16.json",
+      "start": 80,
+      "end": 85,
+      "count": 5
+    },
+    {
+      "index": 17,
+      "filename": "traces_chunk_17.json",
+      "start": 85,
+      "end": 90,
+      "count": 5
+    },
+    {
+      "index": 18,
+      "filename": "traces_chunk_18.json",
+      "start": 90,
+      "end": 95,
+      "count": 5
+    },
+    {
+      "index": 19,
+      "filename": "traces_chunk_19.json",
+      "start": 95,
+      "end": 100,
+      "count": 5
+    }
+  ],
+  "conversations": [
+    {
+      "conversation_id": "conv_0894dea5",
+      "trace_count": 2,
+      "chunk_index": 0
+    },
+    {
+      "conversation_id": "conv_9edbf7cc",
+      "trace_count": 1,
+      "chunk_index": 0
+    },
+    {
+      "conversation_id": "conv_230db8ce",
+      "trace_count": 1,
+      "chunk_index": 0
+    },
+    {
+      "conversation_id": "conv_2aeac211",
+      "trace_count": 1,
+      "chunk_index": 0
+    },
+    {
+      "conversation_id": "conv_545d04fb",
+      "trace_count": 3,
+      "chunk_index": 0
+    },
+    {
+      "conversation_id": "conv_72b821b3",
+      "trace_count": 1,
+      "chunk_index": 1
+    },
+    {
+      "conversation_id": "conv_cb8f67e3",
+      "trace_count": 4,
+      "chunk_index": 1
+    },
+    {
+      "conversation_id": "conv_9e9a6f74",
+      "trace_count": 1,
+      "chunk_index": 1
+    },
+    {
+      "conversation_id": "conv_c108c832",
+      "trace_count": 1,
+      "chunk_index": 1
+    },
+    {
+      "conversation_id": "conv_e554629d",
+      "trace_count": 1,
+      "chunk_index": 1
+    },
+    {
+      "conversation_id": "conv_ace1f201",
+      "trace_count": 1,
+      "chunk_index": 2
+    },
+    {
+      "conversation_id": "conv_a1456094",
+      "trace_count": 1,
+      "chunk_index": 2
+    },
+    {
+      "conversation_id": "conv_0be3142f",
+      "trace_count": 1,
+      "chunk_index": 2
+    },
+    {
+      "conversation_id": "conv_12d3afa6",
+      "trace_count": 1,
+      "chunk_index": 2
+    },
+    {
+      "conversation_id": "conv_f1ae8d55",
+      "trace_count": 1,
+      "chunk_index": 2
+    },
+    {
+      "conversation_id": "conv_1102ee32",
+      "trace_count": 1,
+      "chunk_index": 3
+    },
+    {
+      "conversation_id": "conv_5680e1ee",
+      "trace_count": 1,
+      "chunk_index": 3
+    },
+    {
+      "conversation_id": "conv_af4dc1b9",
+      "trace_count": 1,
+      "chunk_index": 3
+    },
+    {
+      "conversation_id": "conv_32ebd209",
+      "trace_count": 1,
+      "chunk_index": 3
+    },
+    {
+      "conversation_id": "conv_e2dff7a1",
+      "trace_count": 1,
+      "chunk_index": 3
+    },
+    {
+      "conversation_id": "conv_de5d37ed",
+      "trace_count": 1,
+      "chunk_index": 4
+    },
+    {
+      "conversation_id": "conv_df079e8b",
+      "trace_count": 1,
+      "chunk_index": 4
+    },
+    {
+      "conversation_id": "conv_be7d8078",
+      "trace_count": 1,
+      "chunk_index": 4
+    },
+    {
+      "conversation_id": "conv_d2e4e26d",
+      "trace_count": 1,
+      "chunk_index": 4
+    },
+    {
+      "conversation_id": "conv_e8b96ed3",
+      "trace_count": 1,
+      "chunk_index": 4
+    },
+    {
+      "conversation_id": "conv_650b0352",
+      "trace_count": 1,
+      "chunk_index": 5
+    },
+    {
+      "conversation_id": "conv_6f67864a",
+      "trace_count": 1,
+      "chunk_index": 5
+    },
+    {
+      "conversation_id": "conv_71d9e855",
+      "trace_count": 1,
+      "chunk_index": 5
+    },
+    {
+      "conversation_id": "conv_ea3af64f",
+      "trace_count": 1,
+      "chunk_index": 5
+    },
+    {
+      "conversation_id": "conv_dba998f8",
+      "trace_count": 1,
+      "chunk_index": 5
+    },
+    {
+      "conversation_id": "conv_da3caf88",
+      "trace_count": 1,
+      "chunk_index": 6
+    },
+    {
+      "conversation_id": "conv_a13a023d",
+      "trace_count": 1,
+      "chunk_index": 6
+    },
+    {
+      "conversation_id": "conv_d354e643",
+      "trace_count": 1,
+      "chunk_index": 6
+    },
+    {
+      "conversation_id": "conv_4a3ec9e8",
+      "trace_count": 6,
+      "chunk_index": 6
+    },
+    {
+      "conversation_id": "conv_68cf943f",
+      "trace_count": 1,
+      "chunk_index": 6
+    },
+    {
+      "conversation_id": "conv_77eb943b",
+      "trace_count": 1,
+      "chunk_index": 7
+    },
+    {
+      "conversation_id": "conv_f9dba8dd",
+      "trace_count": 1,
+      "chunk_index": 7
+    },
+    {
+      "conversation_id": "conv_1c6675c4",
+      "trace_count": 1,
+      "chunk_index": 7
+    },
+    {
+      "conversation_id": "conv_8e0902af",
+      "trace_count": 1,
+      "chunk_index": 7
+    },
+    {
+      "conversation_id": "conv_72a1203c",
+      "trace_count": 1,
+      "chunk_index": 7
+    },
+    {
+      "conversation_id": "conv_9dc4fefc",
+      "trace_count": 1,
+      "chunk_index": 8
+    },
+    {
+      "conversation_id": "conv_6cb4803f",
+      "trace_count": 1,
+      "chunk_index": 8
+    },
+    {
+      "conversation_id": "conv_167929fe",
+      "trace_count": 1,
+      "chunk_index": 8
+    },
+    {
+      "conversation_id": "conv_ee5a7ecb",
+      "trace_count": 1,
+      "chunk_index": 8
+    },
+    {
+      "conversation_id": "conv_d57fc690",
+      "trace_count": 2,
+      "chunk_index": 8
+    },
+    {
+      "conversation_id": "conv_c4b2a994",
+      "trace_count": 2,
+      "chunk_index": 9
+    },
+    {
+      "conversation_id": "conv_121eabe3",
+      "trace_count": 1,
+      "chunk_index": 9
+    },
+    {
+      "conversation_id": "conv_521092aa",
+      "trace_count": 1,
+      "chunk_index": 9
+    },
+    {
+      "conversation_id": "conv_90ad2681",
+      "trace_count": 1,
+      "chunk_index": 9
+    },
+    {
+      "conversation_id": "conv_5b632a26",
+      "trace_count": 1,
+      "chunk_index": 9
+    },
+    {
+      "conversation_id": "conv_353c9825",
+      "trace_count": 1,
+      "chunk_index": 10
+    },
+    {
+      "conversation_id": "conv_fc8954aa",
+      "trace_count": 1,
+      "chunk_index": 10
+    },
+    {
+      "conversation_id": "conv_d3aa4b60",
+      "trace_count": 1,
+      "chunk_index": 10
+    },
+    {
+      "conversation_id": "conv_a9a3584d",
+      "trace_count": 1,
+      "chunk_index": 10
+    },
+    {
+      "conversation_id": "conv_ba6f07ed",
+      "trace_count": 1,
+      "chunk_index": 10
+    },
+    {
+      "conversation_id": "conv_1967da0f",
+      "trace_count": 1,
+      "chunk_index": 11
+    },
+    {
+      "conversation_id": "conv_40b5c419",
+      "trace_count": 1,
+      "chunk_index": 11
+    },
+    {
+      "conversation_id": "conv_3e026116",
+      "trace_count": 1,
+      "chunk_index": 11
+    },
+    {
+      "conversation_id": "conv_84c8eba9",
+      "trace_count": 1,
+      "chunk_index": 11
+    },
+    {
+      "conversation_id": "conv_c02f23e4",
+      "trace_count": 1,
+      "chunk_index": 11
+    },
+    {
+      "conversation_id": "conv_785b3728",
+      "trace_count": 1,
+      "chunk_index": 12
+    },
+    {
+      "conversation_id": "conv_d64abc50",
+      "trace_count": 1,
+      "chunk_index": 12
+    },
+    {
+      "conversation_id": "conv_722f3dc1",
+      "trace_count": 1,
+      "chunk_index": 12
+    },
+    {
+      "conversation_id": "conv_1871f337",
+      "trace_count": 3,
+      "chunk_index": 12
+    },
+    {
+      "conversation_id": "conv_b6469887",
+      "trace_count": 1,
+      "chunk_index": 12
+    },
+    {
+      "conversation_id": "conv_a3653925",
+      "trace_count": 1,
+      "chunk_index": 13
+    },
+    {
+      "conversation_id": "conv_e61701a3",
+      "trace_count": 1,
+      "chunk_index": 13
+    },
+    {
+      "conversation_id": "conv_6168a5b0",
+      "trace_count": 1,
+      "chunk_index": 13
+    },
+    {
+      "conversation_id": "conv_5514f81c",
+      "trace_count": 1,
+      "chunk_index": 13
+    },
+    {
+      "conversation_id": "conv_63a7feb6",
+      "trace_count": 1,
+      "chunk_index": 13
+    },
+    {
+      "conversation_id": "conv_fd18d44b",
+      "trace_count": 1,
+      "chunk_index": 14
+    },
+    {
+      "conversation_id": "conv_6a4daf98",
+      "trace_count": 1,
+      "chunk_index": 14
+    },
+    {
+      "conversation_id": "conv_6c800b0a",
+      "trace_count": 1,
+      "chunk_index": 14
+    },
+    {
+      "conversation_id": "conv_a5d560df",
+      "trace_count": 1,
+      "chunk_index": 14
+    },
+    {
+      "conversation_id": "conv_7b486242",
+      "trace_count": 1,
+      "chunk_index": 14
+    },
+    {
+      "conversation_id": "conv_b86fed2a",
+      "trace_count": 1,
+      "chunk_index": 15
+    },
+    {
+      "conversation_id": "conv_7ccd6f29",
+      "trace_count": 1,
+      "chunk_index": 15
+    },
+    {
+      "conversation_id": "conv_b4b60e2a",
+      "trace_count": 1,
+      "chunk_index": 15
+    },
+    {
+      "conversation_id": "conv_602c4747",
+      "trace_count": 1,
+      "chunk_index": 15
+    },
+    {
+      "conversation_id": "conv_7ce352cf",
+      "trace_count": 1,
+      "chunk_index": 15
+    },
+    {
+      "conversation_id": "conv_78cc1d4c",
+      "trace_count": 1,
+      "chunk_index": 16
+    },
+    {
+      "conversation_id": "conv_fdb08edc",
+      "trace_count": 1,
+      "chunk_index": 16
+    },
+    {
+      "conversation_id": "conv_1b96db57",
+      "trace_count": 1,
+      "chunk_index": 16
+    },
+    {
+      "conversation_id": "conv_6859a04d",
+      "trace_count": 1,
+      "chunk_index": 16
+    },
+    {
+      "conversation_id": "conv_d5d0df85",
+      "trace_count": 1,
+      "chunk_index": 16
+    },
+    {
+      "conversation_id": "conv_75d6963a",
+      "trace_count": 1,
+      "chunk_index": 17
+    },
+    {
+      "conversation_id": "conv_8d1e1d3d",
+      "trace_count": 1,
+      "chunk_index": 17
+    },
+    {
+      "conversation_id": "conv_78142b4a",
+      "trace_count": 1,
+      "chunk_index": 17
+    },
+    {
+      "conversation_id": "conv_7b92e6d9",
+      "trace_count": 1,
+      "chunk_index": 17
+    },
+    {
+      "conversation_id": "conv_1be30537",
+      "trace_count": 1,
+      "chunk_index": 17
+    },
+    {
+      "conversation_id": "conv_2eecb5dd",
+      "trace_count": 1,
+      "chunk_index": 18
+    },
+    {
+      "conversation_id": "conv_2ed95a9b",
+      "trace_count": 1,
+      "chunk_index": 18
+    },
+    {
+      "conversation_id": "conv_30a7add6",
+      "trace_count": 1,
+      "chunk_index": 18
+    },
+    {
+      "conversation_id": "conv_60e0d6c4",
+      "trace_count": 1,
+      "chunk_index": 18
+    },
+    {
+      "conversation_id": "conv_ec428166",
+      "trace_count": 1,
+      "chunk_index": 18
+    },
+    {
+      "conversation_id": "conv_ff31180c",
+      "trace_count": 1,
+      "chunk_index": 19
+    },
+    {
+      "conversation_id": "conv_39d521bb",
+      "trace_count": 1,
+      "chunk_index": 19
+    },
+    {
+      "conversation_id": "conv_bcecdd8a",
+      "trace_count": 1,
+      "chunk_index": 19
+    },
+    {
+      "conversation_id": "conv_cf18a2ed",
+      "trace_count": 1,
+      "chunk_index": 19
+    },
+    {
+      "conversation_id": "conv_05117d4a",
+      "trace_count": 1,
+      "chunk_index": 19
+    }
+  ]
+}

@@ -22,10 +22,6 @@ export default function Home() {
             <h1 className="text-5xl font-bold tracking-tight text-black">
               Trace Analytics
             </h1>
-            <p className="mt-4 max-w-2xl text-lg text-black/60">
-              Analyze trace data from Om Trace CSV exports with consumer profiles,
-              query rewrites, and recommendation insights.
-            </p>
           </div>
 
           {/* Tab Navigation */}

@@ -325,6 +325,7 @@ const TraceDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [selectedStoreDetail, setSelectedStoreDetail] = useState<TraceStore | null>(null);
+  const [loadingProgress, setLoadingProgress] = useState<{ loaded: number; total: number } | null>(null);
 
   const parseCsv = useCallback(
     (text: string, label: string) => {
@@ -351,10 +352,113 @@ const TraceDashboard = () => {
     [],
   );
 
+  const parseJsonData = useCallback(
+    (text: string, label: string) => {
+      try {
+        const data = JSON.parse(text);
+
+        // Support both array format and object with conversations array
+        const conversations = Array.isArray(data) ? data : data.conversations || data.traces || [];
+
+        if (!conversations.length) {
+          throw new Error("No conversations found in JSON");
+        }
+
+        // Convert JSON format to TraceRecord format
+        const nextRecords: TraceRecord[] = conversations.map((conv: Record<string, unknown>) => {
+          const conversationId = (conv.conversation_id || conv.conversationId || `conv_${Math.random().toString(36).slice(2)}`) as string;
+          const payload = (conv.data || conv.payload || conv) as Record<string, unknown>;
+
+          return {
+            conversationId,
+            traceCount: (conv.trace_count || conv.traceCount || (payload.traces as unknown[])?.length || 0) as number,
+            payload: {
+              consumer_profile: payload.consumer_profile as Record<string, unknown>,
+              ids: payload.ids as Record<string, string>,
+              query_log: payload.query_log as Array<Record<string, unknown>>,
+              timestamps: payload.timestamps as Record<string, string>,
+              trace_count: (payload.trace_count || conv.trace_count) as number,
+              traces: payload.traces as TraceDetail[],
+            },
+          };
+        });
+
+        setRecords(nextRecords);
+        setSelectedId(nextRecords[0].conversationId);
+        setActiveTraceIndex(0);
+        setSourceLabel(label);
+        setErrorMessage(null);
+      } catch (error) {
+        throw new Error(error instanceof Error ? error.message : "Failed to parse JSON");
+      }
+    },
+    [],
+  );
+
   const loadDemo = useCallback(async () => {
     setIsLoading(true);
+    setLoadingProgress(null);
     try {
-      // Try to load sample JSON traces first
+      // Try to load from chunked manifest first
+      const manifestResponse = await fetch("/data/traces/traces_manifest.json");
+      if (manifestResponse.ok) {
+        const manifest = await manifestResponse.json();
+        const totalConversations = manifest.total_conversations;
+        const chunks = manifest.chunks;
+
+        setSourceLabel(`Loading ${totalConversations} conversations...`);
+        setLoadingProgress({ loaded: 0, total: totalConversations });
+
+        // Load chunks progressively
+        const allRecords: TraceRecord[] = [];
+
+        for (let i = 0; i < chunks.length; i++) {
+          const chunk = chunks[i];
+          const chunkResponse = await fetch(`/data/traces/${chunk.filename}`);
+          if (!chunkResponse.ok) {
+            throw new Error(`Failed to load chunk ${i}`);
+          }
+
+          const chunkData = await chunkResponse.json();
+
+          // Convert chunk data to TraceRecords
+          for (const conv of chunkData) {
+            const conversationId = conv.conversation_id || conv.conversationId;
+            const payload = conv.data || conv.payload || conv;
+
+            allRecords.push({
+              conversationId,
+              traceCount: conv.trace_count || conv.traceCount || payload.traces?.length || 0,
+              payload: {
+                consumer_profile: payload.consumer_profile,
+                ids: payload.ids,
+                query_log: payload.query_log,
+                timestamps: payload.timestamps,
+                trace_count: payload.trace_count || conv.trace_count,
+                traces: payload.traces,
+              },
+            });
+          }
+
+          // Update progress after each chunk
+          setLoadingProgress({ loaded: allRecords.length, total: totalConversations });
+          setSourceLabel(`Loading conversations... (${allRecords.length}/${totalConversations})`);
+
+          // Allow UI to update between chunks
+          await new Promise(resolve => setTimeout(resolve, 0));
+        }
+
+        setRecords(allRecords);
+        setSelectedId(allRecords[0]?.conversationId);
+        setActiveTraceIndex(0);
+        setSourceLabel(`VOX Traces (${allRecords.length} conversations)`);
+        setErrorMessage(null);
+        setLoadingProgress(null);
+        setIsLoading(false);
+        return;
+      }
+
+      // Fallback: Try to load sample JSON traces
       const response = await fetch("/data/sample_traces.json");
       if (!response.ok) {
         // No sample data available, just show upload prompt
@@ -363,15 +467,16 @@ const TraceDashboard = () => {
         return;
       }
       const text = await response.text();
-      parseJson(text, "sample_traces.json (3 conversations)");
+      parseJsonData(text, "sample_traces.json (3 conversations)");
     } catch (error) {
       console.error(error);
       // Don't show error, just indicate no data loaded
       setSourceLabel("No data loaded");
     } finally {
       setIsLoading(false);
+      setLoadingProgress(null);
     }
-  }, [parseJson]);
+  }, [parseJsonData]);
 
   useEffect(() => {
     loadDemo();
@@ -457,61 +562,84 @@ const TraceDashboard = () => {
   const activeTrace: TraceDetail | undefined =
     selectedRecord?.payload.traces?.[activeTraceIndex];
 
-  const parseJson = useCallback(
-    (text: string, label: string) => {
-      try {
-        const data = JSON.parse(text);
-
-        // Support both array format and object with conversations array
-        const conversations = Array.isArray(data) ? data : data.conversations || data.traces || [];
-
-        if (!conversations.length) {
-          throw new Error("No conversations found in JSON");
-        }
-
-        // Convert JSON format to TraceRecord format
-        const nextRecords: TraceRecord[] = conversations.map((conv: Record<string, unknown>) => {
-          const conversationId = (conv.conversation_id || conv.conversationId || `conv_${Math.random().toString(36).slice(2)}`) as string;
-          const payload = (conv.data || conv.payload || conv) as Record<string, unknown>;
-
-          return {
-            conversationId,
-            traceCount: (conv.trace_count || conv.traceCount || (payload.traces as unknown[])?.length || 0) as number,
-            payload: {
-              consumer_profile: payload.consumer_profile as Record<string, unknown>,
-              ids: payload.ids as Record<string, string>,
-              query_log: payload.query_log as Array<Record<string, unknown>>,
-              timestamps: payload.timestamps as Record<string, string>,
-              trace_count: (payload.trace_count || conv.trace_count) as number,
-              traces: payload.traces as TraceDetail[],
-            },
-          };
-        });
-
-        setRecords(nextRecords);
-        setSelectedId(nextRecords[0].conversationId);
-        setActiveTraceIndex(0);
-        setSourceLabel(label);
-        setErrorMessage(null);
-      } catch (error) {
-        throw new Error(error instanceof Error ? error.message : "Failed to parse JSON");
-      }
-    },
-    [],
-  );
-
   const handleUpload: React.ChangeEventHandler<HTMLInputElement> = async (
     event,
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
     setIsLoading(true);
+    setLoadingProgress(null);
+    setSourceLabel(`Processing ${file.name}...`);
+
     try {
       const text = await file.text();
 
       // Detect file type by extension or content
       if (file.name.endsWith('.json') || text.trim().startsWith('{') || text.trim().startsWith('[')) {
-        parseJson(text, file.name);
+        // Parse JSON with progress updates (non-blocking)
+        await new Promise<void>((resolve, reject) => {
+          // Use setTimeout to allow UI to update
+          setTimeout(() => {
+            try {
+              const data = JSON.parse(text);
+              const conversations = Array.isArray(data) ? data : data.conversations || data.traces || [];
+
+              if (!conversations.length) {
+                reject(new Error("No conversations found in JSON"));
+                return;
+              }
+
+              setLoadingProgress({ loaded: 0, total: conversations.length });
+
+              // Process in batches to keep UI responsive
+              const batchSize = 10;
+              const nextRecords: TraceRecord[] = [];
+
+              const processBatch = (startIdx: number) => {
+                const endIdx = Math.min(startIdx + batchSize, conversations.length);
+
+                for (let i = startIdx; i < endIdx; i++) {
+                  const conv = conversations[i];
+                  const conversationId = (conv.conversation_id || conv.conversationId || `conv_${i}`) as string;
+                  const payload = (conv.data || conv.payload || conv) as Record<string, unknown>;
+
+                  nextRecords.push({
+                    conversationId,
+                    traceCount: (conv.trace_count || conv.traceCount || (payload.traces as unknown[])?.length || 0) as number,
+                    payload: {
+                      consumer_profile: payload.consumer_profile as Record<string, unknown>,
+                      ids: payload.ids as Record<string, string>,
+                      query_log: payload.query_log as Array<Record<string, unknown>>,
+                      timestamps: payload.timestamps as Record<string, string>,
+                      trace_count: (payload.trace_count || conv.trace_count) as number,
+                      traces: payload.traces as TraceDetail[],
+                    },
+                  });
+                }
+
+                setLoadingProgress({ loaded: nextRecords.length, total: conversations.length });
+                setSourceLabel(`Processing ${file.name}... (${nextRecords.length}/${conversations.length})`);
+
+                if (endIdx < conversations.length) {
+                  // Continue processing next batch
+                  setTimeout(() => processBatch(endIdx), 0);
+                } else {
+                  // Done processing
+                  setRecords(nextRecords);
+                  setSelectedId(nextRecords[0].conversationId);
+                  setActiveTraceIndex(0);
+                  setSourceLabel(`${file.name} (${nextRecords.length} conversations)`);
+                  setErrorMessage(null);
+                  resolve();
+                }
+              };
+
+              processBatch(0);
+            } catch (error) {
+              reject(error instanceof Error ? error : new Error("Failed to parse JSON"));
+            }
+          }, 0);
+        });
       } else {
         parseCsv(text, file.name);
       }
@@ -522,6 +650,7 @@ const TraceDashboard = () => {
       );
     } finally {
       setIsLoading(false);
+      setLoadingProgress(null);
     }
   };
 
@@ -619,7 +748,26 @@ const TraceDashboard = () => {
           {isLoading && (
             <div className="flex flex-col items-center gap-3 rounded-lg border border-black/10 bg-white py-16">
               <Loader2 className="h-6 w-6 animate-spin text-black" />
-              <p className="text-sm text-black/60">Loading trace data...</p>
+              <p className="text-sm text-black/60">
+                {loadingProgress
+                  ? `Loading conversations... (${loadingProgress.loaded}/${loadingProgress.total})`
+                  : "Loading trace data..."}
+              </p>
+              {loadingProgress && (
+                <div className="w-64">
+                  <div className="h-2 w-full rounded-full bg-black/10">
+                    <div
+                      className="h-2 rounded-full bg-black transition-all duration-300"
+                      style={{
+                        width: `${(loadingProgress.loaded / loadingProgress.total) * 100}%`,
+                      }}
+                    />
+                  </div>
+                  <p className="mt-1 text-center text-xs text-black/40">
+                    {Math.round((loadingProgress.loaded / loadingProgress.total) * 100)}%
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
