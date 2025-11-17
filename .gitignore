@@ -2,8 +2,9 @@
 VOX__Metis_100_FullTraces.csv
 *.csv
 
-# Large JSON results (root level only, keep trace-viewer/public/data version)
+# Large JSON files (root level only, keep trace-viewer/public/data version)
 /fuzzy_query_eval_results.json
+/traces.json
 
 # OS files
 .DS_Store

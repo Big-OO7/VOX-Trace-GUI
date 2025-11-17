@@ -456,6 +456,49 @@ const TraceDashboard = () => {
   const activeTrace: TraceDetail | undefined =
     selectedRecord?.payload.traces?.[activeTraceIndex];
 
+  const parseJson = useCallback(
+    (text: string, label: string) => {
+      try {
+        const data = JSON.parse(text);
+
+        // Support both array format and object with conversations array
+        const conversations = Array.isArray(data) ? data : data.conversations || data.traces || [];
+
+        if (!conversations.length) {
+          throw new Error("No conversations found in JSON");
+        }
+
+        // Convert JSON format to TraceRecord format
+        const nextRecords: TraceRecord[] = conversations.map((conv: Record<string, unknown>) => {
+          const conversationId = (conv.conversation_id || conv.conversationId || `conv_${Math.random().toString(36).slice(2)}`) as string;
+          const payload = (conv.data || conv.payload || conv) as Record<string, unknown>;
+
+          return {
+            conversationId,
+            traceCount: (conv.trace_count || conv.traceCount || (payload.traces as unknown[])?.length || 0) as number,
+            payload: {
+              consumer_profile: payload.consumer_profile as Record<string, unknown>,
+              ids: payload.ids as Record<string, string>,
+              query_log: payload.query_log as Array<Record<string, unknown>>,
+              timestamps: payload.timestamps as Record<string, string>,
+              trace_count: (payload.trace_count || conv.trace_count) as number,
+              traces: payload.traces as TraceDetail[],
+            },
+          };
+        });
+
+        setRecords(nextRecords);
+        setSelectedId(nextRecords[0].conversationId);
+        setActiveTraceIndex(0);
+        setSourceLabel(label);
+        setErrorMessage(null);
+      } catch (error) {
+        throw new Error(error instanceof Error ? error.message : "Failed to parse JSON");
+      }
+    },
+    [],
+  );
+
   const handleUpload: React.ChangeEventHandler<HTMLInputElement> = async (
     event,
   ) => {
@@ -464,7 +507,13 @@ const TraceDashboard = () => {
     setIsLoading(true);
     try {
       const text = await file.text();
-      parseCsv(text, file.name);
+
+      // Detect file type by extension or content
+      if (file.name.endsWith('.json') || text.trim().startsWith('{') || text.trim().startsWith('[')) {
+        parseJson(text, file.name);
+      } else {
+        parseCsv(text, file.name);
+      }
     } catch (error) {
       console.error(error);
       setErrorMessage(
@@ -492,7 +541,7 @@ const TraceDashboard = () => {
           <input
             id="trace-upload"
             type="file"
-            accept=".csv,text/csv"
+            accept=".csv,.json,text/csv,application/json"
             className="hidden"
             onChange={handleUpload}
           />
@@ -500,7 +549,7 @@ const TraceDashboard = () => {
             htmlFor="trace-upload"
             className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition hover:bg-black/80"
           >
-            <Upload className="h-4 w-4" /> Upload CSV
+            <Upload className="h-4 w-4" /> Upload CSV or JSON
           </label>
         </div>
       </div>
