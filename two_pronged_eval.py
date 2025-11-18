@@ -874,17 +874,39 @@ async def evaluate_structured_store(
 
 def extract_store_info(store: Dict) -> Dict:
     """Extract store information."""
+    # Extract rating - use star_rating field
+    rating = store.get("star_rating", "N/A")
+
+    # Extract price level - convert price_range integer to $ symbols
+    price_range = store.get("price_range", "N/A")
+    if isinstance(price_range, (int, float)) and price_range > 0:
+        price_level = "$" * int(price_range)
+    else:
+        price_level = "N/A"
+
+    # Extract ETA and clean it
+    eta = store.get("eta_minutes", "N/A")
+    if isinstance(eta, str) and "min" in eta:
+        try:
+            eta_minutes = int(eta.split()[0])
+        except:
+            eta_minutes = eta
+    else:
+        eta_minutes = eta
+
     return {
         "business_id": store.get("business_id", ""),
-        "name": store.get("name", store.get("business_id", "")),
+        "store_id": store.get("store_id", ""),
+        "name": store.get("store_name", store.get("business_id", "")),
         "address": store.get("address", ""),
         "cuisine": store.get("cuisine", ""),
         "dietary_options": store.get("dietary_options", ""),
         "distance_miles": store.get("distance_miles", "N/A"),
-        "eta_minutes": store.get("eta_minutes", "N/A"),
-        "rating": store.get("rating", "N/A"),
-        "price_level": store.get("price_level", "N/A"),
-        "is_open": store.get("is_open", "Unknown")
+        "eta_minutes": eta_minutes,
+        "rating": rating,
+        "price_level": price_level,
+        "is_open": store.get("is_open", "Unknown"),
+        "summary": store.get("summary", "")
     }
 
 
