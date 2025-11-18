@@ -1,0 +1,2128 @@
+{
+  "metadata": {
+    "input_file": "VOX__Metis_100_FullTraces.csv",
+    "num_conversations": 2,
+    "num_valid": 2,
+    "evaluation_type": "two_pronged",
+    "avg_fuzzy_score": 70.0,
+    "avg_structured_score": 20.71,
+    "avg_combined_score": 45.35,
+    "avg_ndcg_fuzzy": 0.972,
+    "avg_ndcg_structured": 0.9388,
+    "avg_ndcg_combined": 0.975
+  },
+  "results": [
+    {
+      "conversation_id": "conv_0894dea5",
+      "num_traces": 2,
+      "avg_fuzzy_score": 80.0,
+      "avg_structured_score": 34.11,
+      "avg_combined_score": 57.05,
+      "avg_ndcg_fuzzy": 1.0,
+      "avg_ndcg_structured": 0.9876,
+      "avg_ndcg_combined": 0.996,
+      "trace_evaluations": [
+        {
+          "trace_id": "1c62a94eabb12da509558bd988a1b79d",
+          "fuzzy_query": "Buffalo wings",
+          "structured_query": "buffalo wings",
+          "intent_category": "Generic / Vague / Underspecified",
+          "q8_weight": 2,
+          "num_stores_evaluated": 5,
+          "avg_fuzzy_score": 80.0,
+          "avg_structured_score": 34.93,
+          "avg_combined_score": 57.47,
+          "ndcg_fuzzy": 1.0,
+          "ndcg_structured": 0.9962,
+          "ndcg_combined": 0.9988,
+          "store_evaluations": [
+            {
+              "store_id": "48856",
+              "fuzzy_evaluation": {
+                "store_id": "48856",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "Yes",
+                    "q2_covers_all_modifiers": "NA"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "Yes",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The menu features multiple chicken wing options, directly matching the 'Buffalo wings' query intent.",
+                    "q2": "The query is simply 'Buffalo wings' with no additional modifiers or details to cover.",
+                    "q3": "No price or affordability constraint is mentioned in the query.",
+                    "q4": "The store is only 0.19 miles away, well within a 2-mile range.",
+                    "q5": "No speed or delivery time requirement is specified in the query.",
+                    "q6": "No quality or rating requirement is specified in the query.",
+                    "q7": "No dietary need is specified in the query.",
+                    "q8": "The store's American fast-casual wings menu aligns with the customer's strong preference for American fast food, chicken, bold flavors, and extra sauces.",
+                    "q9": "Customer has no strict dietary restrictions; menu avoids rare/avoided ingredients (seafood, pork, extra sauces are optional), and offers multiple chicken-based mains."
+                  }
+                },
+                "score_pct": 100.0,
+                "earned_weight": 8,
+                "total_weight": 8,
+                "intent_match_score": 100.0,
+                "is_relevant": true,
+                "answers": {
+                  "q1": "Yes",
+                  "q2": "NA",
+                  "q3": "NA",
+                  "q4": "Yes",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "48856",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "Yes",
+                    "c2_primary_focus_3plus_items": "Yes",
+                    "c3_primary_offering_in_profile": "Yes"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "No"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "Yes"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "Yes"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "Yes"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "Yes"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "NA"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "Yes"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "Yes"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "Menu includes multiple chicken wing items, matching 'buffalo wings'.",
+                    "c2": "There are at least two chicken wing items and several chicken-focused dishes, indicating a primary focus.",
+                    "c3": "The merchant profile describes authentic American fast-casual wings as a main offering.",
+                    "c4": "No menu item combines 'buffalo wings' with a specific dietary restriction; most wings are meat-based and not vegetarian/vegan.",
+                    "c5": "Store name is a number, not 'Buffalo Wings' or a direct match.",
+                    "c6": "Cuisine and offerings are American wings, matching the query's intent.",
+                    "c7": "Wings are available with various flavors (salty, spicy, tangy, sweet) as per menu tags.",
+                    "c8": "Wings are offered in fried/grilled/roasted styles, matching typical buffalo wing prep.",
+                    "c9": "No reviews are available to comment on portion size.",
+                    "c10": "Menu includes large quantity options (e.g., 50 wings), suitable for groups.",
+                    "c11": "No specific ingredient requirements were stated in the query, so not applicable.",
+                    "c12": "Store is less than 0.2 miles away, well within 2 miles.",
+                    "c13": "ETA is 24 minutes, which is within the fast delivery threshold.",
+                    "c14": "No ratings are available, so cannot confirm good ratings.",
+                    "c15": "No price information is provided, so cannot assess affordability.",
+                    "c16": "No deals or promotions are mentioned.",
+                    "c17": "Store open status is unknown, so cannot confirm it is open.",
+                    "c18": "No rating is available, so it is considered below 4.5.",
+                    "c19": "No dietary or other modifiers in the query, but store does not meet all always-enforced checks (e.g., open status)."
+                  }
+                },
+                "score_pct": 52.94,
+                "earned_weight": 18,
+                "total_weight": 34,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "Yes",
+                  "c2": "Yes",
+                  "c3": "Yes",
+                  "c4": "No",
+                  "c5": "No",
+                  "c6": "Yes",
+                  "c7": "Yes",
+                  "c8": "Yes",
+                  "c9": "NA",
+                  "c10": "Yes",
+                  "c11": "NA",
+                  "c12": "Yes",
+                  "c13": "Yes",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 76.47
+            },
+            {
+              "store_id": "11084967",
+              "fuzzy_evaluation": {
+                "store_id": "11084967",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "Yes",
+                    "q2_covers_all_modifiers": "NA"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "Yes",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The menu includes 'Buffalo Chicken Strips & Fries' and 'Plain Wings', both of which match the core intent of 'Buffalo wings'.",
+                    "q2": "The query is simply 'Buffalo wings' with no additional modifiers or details to cover.",
+                    "q3": "No price limit or affordability constraint is mentioned in the query.",
+                    "q4": "The store is less than 1 mile away, which is within the 2-mile range.",
+                    "q5": "No speed or delivery time requirement is specified in the query.",
+                    "q6": "No quality or rating requirement is specified in the query.",
+                    "q7": "No dietary need is specified in the query.",
+                    "q8": "The menu aligns with the customer's preferences for American fast food, chicken, bold flavors, and fried items.",
+                    "q9": "Customer has no strict dietary avoids; menu offers multiple main dishes (e.g., chicken strips, wings, burgers) that do not conflict with rare/occasional ingredient avoidances."
+                  }
+                },
+                "score_pct": 100.0,
+                "earned_weight": 8,
+                "total_weight": 8,
+                "intent_match_score": 100.0,
+                "is_relevant": true,
+                "answers": {
+                  "q1": "Yes",
+                  "q2": "NA",
+                  "q3": "NA",
+                  "q4": "Yes",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "11084967",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "Yes",
+                    "c2_primary_focus_3plus_items": "Yes",
+                    "c3_primary_offering_in_profile": "Yes"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "NA"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "Yes"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "Yes"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "Yes"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "No"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "NA"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "Yes"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "Yes"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "The menu includes 'Plain Wings' and 'Buffalo Chicken Strips & Fries', which are relevant to buffalo wings.",
+                    "c2": "There are at least three chicken wing/strip items, indicating a primary focus.",
+                    "c3": "The merchant profile lists 'authentic pub fare' and mentions meat-based offerings, which typically include wings.",
+                    "c4": "No specific dietary restriction was part of the query, so this is not applicable.",
+                    "c5": "The store name is a numeric ID, not 'Buffalo Wings' or a clear match.",
+                    "c6": "The cuisine is American pub fare, which is similar to what would serve buffalo wings.",
+                    "c7": "Buffalo Chicken Strips & Fries are described as 'spicy' and 'tangy', matching typical buffalo wing flavors.",
+                    "c8": "The menu includes fried chicken wings and strips, matching the typical preparation style.",
+                    "c9": "No reviews are available, so portion size cannot be determined.",
+                    "c10": "No mention of platters, family packs, or catering options.",
+                    "c11": "No specific ingredient requirements were in the query.",
+                    "c12": "The store is less than 1 mile away, within the 2-mile requirement.",
+                    "c13": "The ETA is 33 minutes, which is under the 39-minute threshold.",
+                    "c14": "No ratings are available, so cannot confirm good ratings.",
+                    "c15": "No price information is available.",
+                    "c16": "No deals or promotions are mentioned.",
+                    "c17": "Store open status is unknown, so must be marked as not open.",
+                    "c18": "No rating is available, so it is considered below 4.5.",
+                    "c19": "No modifiers were present in the query, but store is not open, so does not match all requirements."
+                  }
+                },
+                "score_pct": 51.61,
+                "earned_weight": 16,
+                "total_weight": 31,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "Yes",
+                  "c2": "Yes",
+                  "c3": "Yes",
+                  "c4": "NA",
+                  "c5": "No",
+                  "c6": "Yes",
+                  "c7": "Yes",
+                  "c8": "Yes",
+                  "c9": "NA",
+                  "c10": "No",
+                  "c11": "NA",
+                  "c12": "Yes",
+                  "c13": "Yes",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 75.81
+            },
+            {
+              "store_id": "20938",
+              "fuzzy_evaluation": {
+                "store_id": "20938",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "Yes",
+                    "q2_covers_all_modifiers": "NA"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "Yes",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The menu includes multiple types of chicken wings and boneless wings, which directly matches the 'Buffalo wings' query intent.",
+                    "q2": "The query is simply 'Buffalo wings' with no additional modifiers or details to cover.",
+                    "q3": "No price or affordability constraint is mentioned in the query.",
+                    "q4": "The store is 1.98 miles away, which is within the 2-mile range.",
+                    "q5": "No speed or delivery time requirement is specified in the query.",
+                    "q6": "No quality or rating requirement is specified in the query.",
+                    "q7": "No dietary need is specified in the query.",
+                    "q8": "The store offers American fast food (wings, boneless wings, cheesesteak), which aligns with the customer's strong preference for American fast food, bold flavors, and chicken dishes.",
+                    "q9": "Customer has no strict dietary restrictions; main avoids are rare seafood/pork and occasional avoidance of onions/extra sauces. The menu offers multiple main dishes (wings, boneless wings, cheesesteak) that are pork-free and do not contain seafood or onions by default."
+                  }
+                },
+                "score_pct": 100.0,
+                "earned_weight": 8,
+                "total_weight": 8,
+                "intent_match_score": 100.0,
+                "is_relevant": true,
+                "answers": {
+                  "q1": "Yes",
+                  "q2": "NA",
+                  "q3": "NA",
+                  "q4": "Yes",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "20938",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "Yes",
+                    "c2_primary_focus_3plus_items": "Yes",
+                    "c3_primary_offering_in_profile": "Yes"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "No"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "Yes"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "Yes"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "Yes"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "Yes"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "NA"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "Yes"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "Yes"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "The menu includes multiple chicken wings and boneless wing items, which are buffalo wings or close variants.",
+                    "c2": "There are at least three items (Wings (12), Kids Wings, 12 PC Boneless, 6 Boneless, 6 pc Boneless) that are buffalo wings or close variants.",
+                    "c3": "The merchant profile describes American bar and grill fare, which typically includes buffalo wings as a primary offering.",
+                    "c4": "No menu item is specifically marked as meeting dietary restrictions (e.g., gluten-free, vegetarian) for buffalo wings; dietary options are only for sides.",
+                    "c5": "The store name is '20938', which does not match 'buffalo wings'.",
+                    "c6": "The cuisine is American bar and grill, which is appropriate for buffalo wings.",
+                    "c7": "Multiple wing items list flavors like spicy, tangy, and sweet, which are typical for buffalo wings.",
+                    "c8": "Wings are offered in fried/grilled/roasted styles, matching typical buffalo wing preparation.",
+                    "c9": "No reviews are available, so portion size cannot be determined.",
+                    "c10": "Wings are available in 12-piece portions, which can serve groups.",
+                    "c11": "No specific ingredient requirements were given in the query, so this is not applicable.",
+                    "c12": "The store is within 2 miles (1.98 miles).",
+                    "c13": "ETA is 30 minutes, which is within the 39-minute threshold.",
+                    "c14": "No ratings are available for the store or items.",
+                    "c15": "No price information is available.",
+                    "c16": "No deals or promotions are mentioned.",
+                    "c17": "Store open status is unknown, so it cannot be confirmed as open.",
+                    "c18": "No rating is available, so it is considered below 4.5.",
+                    "c19": "There are no modifiers in the query, but store open status is unknown, so cannot match all requirements."
+                  }
+                },
+                "score_pct": 52.94,
+                "earned_weight": 18,
+                "total_weight": 34,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "Yes",
+                  "c2": "Yes",
+                  "c3": "Yes",
+                  "c4": "No",
+                  "c5": "No",
+                  "c6": "Yes",
+                  "c7": "Yes",
+                  "c8": "Yes",
+                  "c9": "NA",
+                  "c10": "Yes",
+                  "c11": "NA",
+                  "c12": "Yes",
+                  "c13": "Yes",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 76.47
+            },
+            {
+              "store_id": "31809",
+              "fuzzy_evaluation": {
+                "store_id": "31809",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "No",
+                    "q2_covers_all_modifiers": "NA"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "No",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The query is for 'Buffalo wings', but the menu does not list any wings or Buffalo-style chicken items; closest is 'Garlic Chicken' pizza, which is not the same.",
+                    "q2": "There are no modifiers in the query; the main idea is 'Buffalo wings', which is not present.",
+                    "q3": "No price limit is specified in the query, so this is not applicable.",
+                    "q4": "The store is 2.46 miles away, which is outside the 2-mile range.",
+                    "q5": "No speed or delivery time requirement is mentioned in the query.",
+                    "q6": "No quality or rating requirement is mentioned in the query.",
+                    "q7": "No dietary need is specified in the query.",
+                    "q8": "The menu includes American and Italian-American items, chicken, and bold flavors, which align with the customer's stated preferences.",
+                    "q9": "Customer has no strict dietary restrictions; menu avoids seafood and pork in most items, and offers several chicken and beef-free options, matching the customer's rare/occasional avoids."
+                  }
+                },
+                "score_pct": 50.0,
+                "earned_weight": 4,
+                "total_weight": 8,
+                "intent_match_score": 0.0,
+                "is_relevant": false,
+                "answers": {
+                  "q1": "No",
+                  "q2": "NA",
+                  "q3": "NA",
+                  "q4": "No",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "31809",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "No",
+                    "c2_primary_focus_3plus_items": "No",
+                    "c3_primary_offering_in_profile": "No"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "No"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "No"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "No"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "No"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "No"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "No"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "No"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "Yes"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "No menu items are buffalo wings or similar; the cuisine is Italian-American and Mediterranean.",
+                    "c2": "There are no buffalo wings or similar items, so it is not a primary focus.",
+                    "c3": "The merchant profile does not mention buffalo wings or related cuisine.",
+                    "c4": "No menu items are buffalo wings, so dietary restrictions for that dish are not met.",
+                    "c5": "The store name does not match 'buffalo wings.'",
+                    "c6": "The store does not serve American bar food or wings; it is Italian-American/Mediterranean.",
+                    "c7": "No buffalo wings or similar items with relevant flavors (spicy, tangy, etc.) are present.",
+                    "c8": "No items match the typical preparation style of buffalo wings (fried, sauced, etc.).",
+                    "c9": "No reviews are available, so portion size cannot be determined.",
+                    "c10": "No evidence of platters, family packs, or large group offerings for wings.",
+                    "c11": "No items with the specific ingredients of buffalo wings (chicken wings, buffalo sauce, etc.).",
+                    "c12": "The store is slightly over 2 miles away (2.46 miles).",
+                    "c13": "The ETA is 33 minutes, which meets the speed requirement for a 'fast' query.",
+                    "c14": "No ratings are available for the store or items.",
+                    "c15": "No price information is available.",
+                    "c16": "No deals or promotions are mentioned.",
+                    "c17": "The store's open status is unknown, so it cannot be confirmed as open.",
+                    "c18": "No rating is available, so it is considered below 4.5.",
+                    "c19": "No menu item matches the main dish (buffalo wings) and any modifiers."
+                  }
+                },
+                "score_pct": 5.41,
+                "earned_weight": 2,
+                "total_weight": 37,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "No",
+                  "c2": "No",
+                  "c3": "No",
+                  "c4": "No",
+                  "c5": "No",
+                  "c6": "No",
+                  "c7": "No",
+                  "c8": "No",
+                  "c9": "NA",
+                  "c10": "No",
+                  "c11": "No",
+                  "c12": "No",
+                  "c13": "Yes",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 27.7
+            },
+            {
+              "store_id": "13649871",
+              "fuzzy_evaluation": {
+                "store_id": "13649871",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "No",
+                    "q2_covers_all_modifiers": "NA"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "No",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The query is for 'Buffalo wings', but the menu does not list wings or any buffalo-style chicken; closest is chicken tenders, which is not the same dish.",
+                    "q2": "There are no modifiers in the query, and the main intent (buffalo wings) is not present, so this is not applicable.",
+                    "q3": "No price limit is mentioned in the query, and the store's price level is N/A.",
+                    "q4": "The store is 2.29 miles away, which is just outside the 2-mile range.",
+                    "q5": "No speed or delivery time requirement is specified in the query.",
+                    "q6": "No quality or rating requirement is specified in the query.",
+                    "q7": "No dietary need is specified in the query.",
+                    "q8": "The menu is American pub-style with comfort food, which aligns with the customer's strong preference for American fast food and bold, robust flavors.",
+                    "q9": "The customer has no strict dietary restrictions, and the menu offers several main dishes that avoid rare/avoided ingredients (seafood, pork, onions, extra sauces), so at least 2 mains are suitable."
+                  }
+                },
+                "score_pct": 50.0,
+                "earned_weight": 4,
+                "total_weight": 8,
+                "intent_match_score": 0.0,
+                "is_relevant": false,
+                "answers": {
+                  "q1": "No",
+                  "q2": "NA",
+                  "q3": "NA",
+                  "q4": "No",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "13649871",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "No",
+                    "c2_primary_focus_3plus_items": "No",
+                    "c3_primary_offering_in_profile": "No"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "NA"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "Yes"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "No"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "No"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "No"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "No"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "No"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "Yes"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "No menu item is buffalo wings or a clear variant; closest is chicken tenders, which is not the same.",
+                    "c2": "There are not 3+ items of buffalo wings or similar; no wings at all.",
+                    "c3": "Merchant profile does not mention buffalo wings as a primary offering.",
+                    "c4": "No buffalo wings or similar items, so dietary restrictions with the main dish are not applicable.",
+                    "c5": "Store name does not match 'Buffalo Wings' or any similar name.",
+                    "c6": "Cuisine is American pub-style, which is similar to typical buffalo wings establishments.",
+                    "c7": "No buffalo wings or similar items with relevant flavors (e.g., spicy, tangy, etc.).",
+                    "c8": "No buffalo wings or similar items with relevant preparation style (fried wings with sauce).",
+                    "c9": "No reviews available, so portion size cannot be determined.",
+                    "c10": "No mention of platters, large quantities, or catering options for wings or similar items.",
+                    "c11": "No menu item with both the main dish (buffalo wings) and specific ingredients (e.g., chicken wings, buffalo sauce).",
+                    "c12": "Store is slightly over 2 miles away (2.29 miles).",
+                    "c13": "ETA is 34 minutes, which meets the speed requirement for fast delivery.",
+                    "c14": "No ratings available for the store or items.",
+                    "c15": "No price information provided.",
+                    "c16": "No deals or promotions information provided.",
+                    "c17": "Store open status is unknown, so cannot confirm it is open.",
+                    "c18": "No rating available, so it is considered below 4.5.",
+                    "c19": "No item matches all modifiers (main dish: buffalo wings, plus any other modifiers)."
+                  }
+                },
+                "score_pct": 11.76,
+                "earned_weight": 4,
+                "total_weight": 34,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "No",
+                  "c2": "No",
+                  "c3": "No",
+                  "c4": "NA",
+                  "c5": "No",
+                  "c6": "Yes",
+                  "c7": "No",
+                  "c8": "No",
+                  "c9": "NA",
+                  "c10": "No",
+                  "c11": "No",
+                  "c12": "No",
+                  "c13": "Yes",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 30.88
+            }
+          ]
+        },
+        {
+          "trace_id": "b6cab22de01b79ac5d53d5487c90975b",
+          "fuzzy_query": "show me places that have buffalo wings",
+          "structured_query": "buffalo wings",
+          "intent_category": "Flavor-Based (Taste / Texture)",
+          "q8_weight": 2,
+          "num_stores_evaluated": 5,
+          "avg_fuzzy_score": 80.0,
+          "avg_structured_score": 33.28,
+          "avg_combined_score": 56.64,
+          "ndcg_fuzzy": 1.0,
+          "ndcg_structured": 0.9789,
+          "ndcg_combined": 0.9932,
+          "store_evaluations": [
+            {
+              "store_id": "48856",
+              "fuzzy_evaluation": {
+                "store_id": "48856",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "Yes",
+                    "q2_covers_all_modifiers": "NA"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "Yes",
+                    "q5_speed_requirement_met": "Yes",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The query asks for places with buffalo wings; the menu includes multiple chicken wing options, directly matching the intent.",
+                    "q2": "There are no additional details or modifiers in the query beyond 'buffalo wings', so this is not applicable.",
+                    "q3": "No price limit or affordability constraint is mentioned in the query.",
+                    "q4": "The store is less than 0.2 miles away, which is well within a 2-mile range.",
+                    "q5": "The ETA is 24 minutes, which is under the 30-minute threshold for 'fast' or 'quick' queries, though the query does not specify speed.",
+                    "q6": "No quality or rating requirement is present in the query.",
+                    "q7": "No dietary need is specified in the query.",
+                    "q8": "The store serves American fast food, especially wings, which aligns with the customer's strong preference for American fast food, bold flavors, and chicken dishes.",
+                    "q9": "The customer has no strict dietary restrictions and only occasionally avoids onions and extra sauces; the menu offers multiple main dishes (wings, tenders) that do not conflict with these preferences."
+                  }
+                },
+                "score_pct": 100.0,
+                "earned_weight": 9,
+                "total_weight": 9,
+                "intent_match_score": 100.0,
+                "is_relevant": true,
+                "answers": {
+                  "q1": "Yes",
+                  "q2": "NA",
+                  "q3": "NA",
+                  "q4": "Yes",
+                  "q5": "Yes",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "48856",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "Yes",
+                    "c2_primary_focus_3plus_items": "Yes",
+                    "c3_primary_offering_in_profile": "Yes"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "No"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "Yes"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "Yes"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "Yes"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "Yes"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "NA"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "Yes"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "Yes"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "Yes"
+                  },
+                  "reasoning": {
+                    "c1": "Menu includes multiple chicken wing items, matching 'buffalo wings'.",
+                    "c2": "There are at least 3 items focused on chicken wings/tenders, indicating a primary focus.",
+                    "c3": "Merchant profile describes authentic American fast-casual wings as a main offering.",
+                    "c4": "No menu item combines 'buffalo wings' with a dietary restriction (e.g., vegetarian, gluten-free).",
+                    "c5": "Store name is a number, not an exact match for 'buffalo wings'.",
+                    "c6": "Cuisine and offerings are American wings, matching the query intent.",
+                    "c7": "Chicken wings items have flavors like spicy, tangy, and sweet, which are typical for buffalo wings.",
+                    "c8": "Chicken wings are offered fried, matching common buffalo wing prep style.",
+                    "c9": "No reviews are available to comment on portion size.",
+                    "c10": "Menu includes a '50 Wings' platter, suitable for large groups.",
+                    "c11": "No specific ingredient requirements were mentioned in the query.",
+                    "c12": "Store is within 0.2 miles, well within the 2-mile requirement.",
+                    "c13": "ETA is 24 minutes, which is fast.",
+                    "c14": "No ratings are available, so cannot confirm good ratings.",
+                    "c15": "No price information is available.",
+                    "c16": "No deals or promotions are mentioned.",
+                    "c17": "Store open status is unknown, so cannot confirm it is open.",
+                    "c18": "No rating is available, so it is considered below 4.5.",
+                    "c19": "No modifiers were present in the query, so the main dish/cuisine is matched."
+                  }
+                },
+                "score_pct": 61.76,
+                "earned_weight": 21,
+                "total_weight": 34,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5"
+                ],
+                "answers": {
+                  "c1": "Yes",
+                  "c2": "Yes",
+                  "c3": "Yes",
+                  "c4": "No",
+                  "c5": "No",
+                  "c6": "Yes",
+                  "c7": "Yes",
+                  "c8": "Yes",
+                  "c9": "NA",
+                  "c10": "Yes",
+                  "c11": "NA",
+                  "c12": "Yes",
+                  "c13": "Yes",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "Yes"
+                }
+              },
+              "combined_score": 80.88
+            },
+            {
+              "store_id": "11084967",
+              "fuzzy_evaluation": {
+                "store_id": "11084967",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "Yes",
+                    "q2_covers_all_modifiers": "NA"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "Yes",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The menu includes 'Buffalo Chicken Strips & Fries' and 'Plain Wings', which match the intent of finding buffalo wings or similar items.",
+                    "q2": "The query only asks for 'buffalo wings' with no additional modifiers or details, so this is not applicable.",
+                    "q3": "No price constraint is mentioned in the query, and the store's price level is N/A.",
+                    "q4": "The store is less than 1 mile away, which is within a 2-mile range.",
+                    "q5": "No speed or delivery time requirement is specified in the query.",
+                    "q6": "No quality or rating requirement is specified in the query.",
+                    "q7": "No dietary need is specified in the query.",
+                    "q8": "The menu aligns with the customer's preferences for American fast food, chicken, bold flavors, and crispy/robust items.",
+                    "q9": "The customer has no strict dietary restrictions; the menu avoids rare/occasional avoids (seafood, pork, extra sauces, onions) and offers multiple main dishes that fit their preferences."
+                  }
+                },
+                "score_pct": 100.0,
+                "earned_weight": 8,
+                "total_weight": 8,
+                "intent_match_score": 100.0,
+                "is_relevant": true,
+                "answers": {
+                  "q1": "Yes",
+                  "q2": "NA",
+                  "q3": "NA",
+                  "q4": "Yes",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "11084967",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "Yes",
+                    "c2_primary_focus_3plus_items": "No",
+                    "c3_primary_offering_in_profile": "No"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "NA"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "Yes"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "Yes"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "No"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "No"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "NA"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "Yes"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "Yes"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "The menu includes 'Plain Wings' and 'Buffalo Chicken Strips & Fries', which are relevant to buffalo wings.",
+                    "c2": "There is only one item that is directly 'wings'; the rest are chicken strips, so not 3+ buffalo wings items.",
+                    "c3": "The merchant profile mentions 'authentic pub fare' but does not specifically mention buffalo wings as a primary offering.",
+                    "c4": "No dietary restrictions were specified in the query, so this is not applicable.",
+                    "c5": "The store name is a numeric ID, not a match for 'buffalo wings'.",
+                    "c6": "The cuisine is American pub fare, which is similar to typical buffalo wings establishments.",
+                    "c7": "'Buffalo Chicken Strips & Fries' has spicy and tangy flavors, matching typical buffalo wing flavors.",
+                    "c8": "No menu item is specifically described as 'buffalo wings' with a particular prep style (e.g., fried, sauced); only 'Plain Wings' and 'Buffalo Chicken Strips' are present.",
+                    "c9": "No reviews are available, so portion size cannot be determined.",
+                    "c10": "No mention of platters, family packs, or catering options for wings.",
+                    "c11": "No specific ingredient requirements were given in the query.",
+                    "c12": "The store is less than 1 mile away, within the 2-mile requirement.",
+                    "c13": "The ETA is 33 minutes, which is within the 39-minute threshold.",
+                    "c14": "No ratings are available for the store or items.",
+                    "c15": "No price information is available.",
+                    "c16": "No deals or promotions are mentioned.",
+                    "c17": "The store's open status is unknown, so it cannot be confirmed as open.",
+                    "c18": "No rating is available, so it is considered below 4.5.",
+                    "c19": "There are no modifiers in the query, but the store does not meet all always-enforced checks (e.g., open status)."
+                  }
+                },
+                "score_pct": 35.48,
+                "earned_weight": 11,
+                "total_weight": 31,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "Yes",
+                  "c2": "No",
+                  "c3": "No",
+                  "c4": "NA",
+                  "c5": "No",
+                  "c6": "Yes",
+                  "c7": "Yes",
+                  "c8": "No",
+                  "c9": "NA",
+                  "c10": "No",
+                  "c11": "NA",
+                  "c12": "Yes",
+                  "c13": "Yes",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 67.74
+            },
+            {
+              "store_id": "20938",
+              "fuzzy_evaluation": {
+                "store_id": "20938",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "Yes",
+                    "q2_covers_all_modifiers": "NA"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "Yes",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The menu includes multiple chicken wing options, directly matching the query for 'buffalo wings'.",
+                    "q2": "The query has no modifiers or extra details beyond 'buffalo wings', so this is not applicable.",
+                    "q3": "No price or affordability constraint was mentioned in the query.",
+                    "q4": "The store is 1.98 miles away, which is within the 2-mile threshold.",
+                    "q5": "No speed or delivery time requirement was specified in the query.",
+                    "q6": "No quality or rating requirement was specified in the query.",
+                    "q7": "No dietary need was specified in the query.",
+                    "q8": "The store serves American bar and grill food, including wings, which aligns with the customer's strong preference for American fast food, bold flavors, and chicken dishes.",
+                    "q9": "The customer has no strict dietary restrictions, and the menu offers several main dishes that avoid rare/occasional avoids (seafood, pork, extra sauces, onions), so at least 2 mains are suitable."
+                  }
+                },
+                "score_pct": 100.0,
+                "earned_weight": 8,
+                "total_weight": 8,
+                "intent_match_score": 100.0,
+                "is_relevant": true,
+                "answers": {
+                  "q1": "Yes",
+                  "q2": "NA",
+                  "q3": "NA",
+                  "q4": "Yes",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "20938",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "Yes",
+                    "c2_primary_focus_3plus_items": "Yes",
+                    "c3_primary_offering_in_profile": "Yes"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "No"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "Yes"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "Yes"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "Yes"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "Yes"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "NA"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "Yes"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "Yes"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "Menu includes multiple chicken wings and boneless wing items, matching 'buffalo wings'.",
+                    "c2": "There are at least three items focused on wings/boneless wings, indicating a primary focus.",
+                    "c3": "Merchant profile describes American bar and grill with meat-based dishes, matching the query.",
+                    "c4": "No menu item specifically lists both 'buffalo wings' and a dietary restriction; vegetarian/gluten-free options are only sides.",
+                    "c5": "Store name is a number, not an exact match for any specific 'buffalo wings' store.",
+                    "c6": "Cuisine is American bar and grill, which is typical for buffalo wings.",
+                    "c7": "Wings and boneless wings have spicy, tangy, and other relevant flavors.",
+                    "c8": "Wings are offered in fried/grilled/roasted styles, matching typical buffalo wing prep.",
+                    "c9": "No reviews are available to assess portion size.",
+                    "c10": "Wings are available in 12-piece portions, suitable for groups.",
+                    "c11": "No specific ingredient requirements were given in the query.",
+                    "c12": "Store is within 2 miles (1.98 miles).",
+                    "c13": "ETA is 30 minutes, which is within the fast delivery threshold.",
+                    "c14": "No ratings are available, so cannot confirm good ratings.",
+                    "c15": "No price information is available.",
+                    "c16": "No deals or promotions are mentioned.",
+                    "c17": "Store open status is unknown, so cannot confirm it is open.",
+                    "c18": "No rating is available, so it is considered below 4.5.",
+                    "c19": "No dietary, price, or other modifiers in the query, but store open check fails, so answer is No."
+                  }
+                },
+                "score_pct": 52.94,
+                "earned_weight": 18,
+                "total_weight": 34,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "Yes",
+                  "c2": "Yes",
+                  "c3": "Yes",
+                  "c4": "No",
+                  "c5": "No",
+                  "c6": "Yes",
+                  "c7": "Yes",
+                  "c8": "Yes",
+                  "c9": "NA",
+                  "c10": "Yes",
+                  "c11": "NA",
+                  "c12": "Yes",
+                  "c13": "Yes",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 76.47
+            },
+            {
+              "store_id": "31809",
+              "fuzzy_evaluation": {
+                "store_id": "31809",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "No",
+                    "q2_covers_all_modifiers": "NA"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "No",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The query is for 'buffalo wings', but the menu does not list wings or any buffalo-style chicken; closest is chicken pizza or chicken pasta, which do not match the intent.",
+                    "q2": "There are no modifiers in the query beyond 'buffalo wings', so this is not applicable.",
+                    "q3": "No price limit is mentioned in the query, so this is not applicable.",
+                    "q4": "The store is 2.46 miles away, which is outside the 2-mile range.",
+                    "q5": "No speed or delivery time requirement is specified in the query.",
+                    "q6": "No quality or rating requirement is specified in the query.",
+                    "q7": "No dietary need is specified in the query.",
+                    "q8": "The menu includes American and Italian items, chicken-based dishes, and bold flavors, which align with the customer's stated preferences.",
+                    "q9": "The customer has no strict dietary restrictions, only occasional avoidance of onions and extra sauces; the menu offers several items that do not include these, so it avoids hard avoids."
+                  }
+                },
+                "score_pct": 50.0,
+                "earned_weight": 4,
+                "total_weight": 8,
+                "intent_match_score": 0.0,
+                "is_relevant": false,
+                "answers": {
+                  "q1": "No",
+                  "q2": "NA",
+                  "q3": "NA",
+                  "q4": "No",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "31809",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "No",
+                    "c2_primary_focus_3plus_items": "No",
+                    "c3_primary_offering_in_profile": "No"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "No"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "No"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "No"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "No"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "No"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "No"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "No"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "Yes"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "No menu item is buffalo wings or a clear variant; the cuisine is Italian-American/Mediterranean.",
+                    "c2": "No buffalo wings or similar items; no evidence of 3+ items related to the query.",
+                    "c3": "Buffalo wings are not mentioned in the merchant profile.",
+                    "c4": "No buffalo wings or similar items with dietary restrictions found.",
+                    "c5": "Store name does not match any buffalo wings-related query.",
+                    "c6": "Cuisine is not similar to a typical buffalo wings restaurant (usually American/bar food).",
+                    "c7": "No menu item combines buffalo wings and relevant flavors (spicy, tangy, etc.).",
+                    "c8": "No menu item matches buffalo wings or its typical preparation style (fried, sauced wings).",
+                    "c9": "No reviews available to assess portion size.",
+                    "c10": "No evidence of platters, family packs, or large quantity options for wings.",
+                    "c11": "No menu item with both buffalo wings and specific ingredients (e.g., chicken wings, buffalo sauce).",
+                    "c12": "Store is 2.46 miles away, which is not within 2 miles.",
+                    "c13": "ETA is 33 minutes, which meets a general speed requirement.",
+                    "c14": "No ratings available for the store or items.",
+                    "c15": "No price information provided.",
+                    "c16": "No deals or promotions information provided.",
+                    "c17": "Store open status is unknown, so cannot confirm it is open.",
+                    "c18": "No rating available, so cannot be above 4.5.",
+                    "c19": "No item matches all modifiers (buffalo wings is not present at all)."
+                  }
+                },
+                "score_pct": 5.41,
+                "earned_weight": 2,
+                "total_weight": 37,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "No",
+                  "c2": "No",
+                  "c3": "No",
+                  "c4": "No",
+                  "c5": "No",
+                  "c6": "No",
+                  "c7": "No",
+                  "c8": "No",
+                  "c9": "NA",
+                  "c10": "No",
+                  "c11": "No",
+                  "c12": "No",
+                  "c13": "Yes",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 27.7
+            },
+            {
+              "store_id": "13649871",
+              "fuzzy_evaluation": {
+                "store_id": "13649871",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "No",
+                    "q2_covers_all_modifiers": "NA"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "No",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The query is for 'buffalo wings' but the menu does not list wings or any buffalo-style chicken; closest is chicken tenders, which is not the same.",
+                    "q2": "There are no modifiers in the query beyond 'buffalo wings', so this is not applicable.",
+                    "q3": "No price information is provided in the query or for the store.",
+                    "q4": "The store is 2.29 miles away, which is just outside the 2-mile range.",
+                    "q5": "No speed or delivery time requirement is specified in the query.",
+                    "q6": "No quality or rating requirement is specified in the query.",
+                    "q7": "No dietary need is specified in the query.",
+                    "q8": "The menu is American pub-style with comfort food, including chicken tenders, sliders, and fries, which aligns with the customer's strong preference for American fast food and bold, robust flavors.",
+                    "q9": "Customer has no strict dietary restrictions and only occasionally avoids onions and extra sauces; the menu offers several main dishes (e.g., chicken tenders, sliders, cheesesteak) that do not conflict with these preferences."
+                  }
+                },
+                "score_pct": 50.0,
+                "earned_weight": 4,
+                "total_weight": 8,
+                "intent_match_score": 0.0,
+                "is_relevant": false,
+                "answers": {
+                  "q1": "No",
+                  "q2": "NA",
+                  "q3": "NA",
+                  "q4": "No",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "13649871",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "No",
+                    "c2_primary_focus_3plus_items": "No",
+                    "c3_primary_offering_in_profile": "No"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "No"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "Yes"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "No"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "No"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "No"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "No"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "No"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "Yes"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "No menu item is buffalo wings or a clear variant; closest is chicken tenders, which is not the same.",
+                    "c2": "There are not 3+ items of buffalo wings or similar; no wings at all.",
+                    "c3": "Merchant profile does not mention buffalo wings as a primary offering.",
+                    "c4": "No buffalo wings or similar item with dietary restrictions present.",
+                    "c5": "Store name does not match any buffalo wings-specific store.",
+                    "c6": "Cuisine is American pub style, which is similar to places that might serve buffalo wings.",
+                    "c7": "No buffalo wings or similar item with relevant flavors (e.g., spicy, tangy, buffalo sauce).",
+                    "c8": "No buffalo wings or similar item with fried/wing prep style.",
+                    "c9": "No reviews available to assess portion size.",
+                    "c10": "No mention of platters, family packs, or large group options.",
+                    "c11": "No item with both buffalo wings and specific ingredients (e.g., buffalo sauce, blue cheese).",
+                    "c12": "Store is slightly over 2 miles away (2.29 miles).",
+                    "c13": "ETA is 34 minutes, which meets the speed requirement.",
+                    "c14": "No ratings available for the store or items.",
+                    "c15": "No price information provided.",
+                    "c16": "No deals or promotions information provided.",
+                    "c17": "Store open status is unknown, so cannot confirm it is open.",
+                    "c18": "No rating available, so considered below threshold.",
+                    "c19": "No item matches all modifiers (buffalo wings is not present at all)."
+                  }
+                },
+                "score_pct": 10.81,
+                "earned_weight": 4,
+                "total_weight": 37,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "No",
+                  "c2": "No",
+                  "c3": "No",
+                  "c4": "No",
+                  "c5": "No",
+                  "c6": "Yes",
+                  "c7": "No",
+                  "c8": "No",
+                  "c9": "NA",
+                  "c10": "No",
+                  "c11": "No",
+                  "c12": "No",
+                  "c13": "Yes",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 30.41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_9edbf7cc",
+      "num_traces": 1,
+      "avg_fuzzy_score": 60.0,
+      "avg_structured_score": 7.31,
+      "avg_combined_score": 33.65,
+      "avg_ndcg_fuzzy": 0.9441,
+      "avg_ndcg_structured": 0.89,
+      "avg_ndcg_combined": 0.9539,
+      "trace_evaluations": [
+        {
+          "trace_id": "f0d2abf136cb449a91634a37500df507",
+          "fuzzy_query": "some refreshing and light",
+          "structured_query": "grilled chicken salad",
+          "intent_category": "Flavor-Based (Taste / Texture)",
+          "q8_weight": 2,
+          "num_stores_evaluated": 3,
+          "avg_fuzzy_score": 60.0,
+          "avg_structured_score": 7.31,
+          "avg_combined_score": 33.65,
+          "ndcg_fuzzy": 0.9441,
+          "ndcg_structured": 0.89,
+          "ndcg_combined": 0.9539,
+          "store_evaluations": [
+            {
+              "store_id": "320587",
+              "fuzzy_evaluation": {
+                "store_id": "320587",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "Yes",
+                    "q2_covers_all_modifiers": "No"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "Yes",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The menu includes light and refreshing options such as Green Mango Salad and Vegetable Salad, which match the intent of 'some refreshing and light'.",
+                    "q2": "The structured query specifies 'grilled chicken salad', but the menu does not offer grilled chicken or a direct chicken salad; salads are vegetarian or vegan.",
+                    "q3": "No price information is provided for menu items or the store, so this cannot be evaluated.",
+                    "q4": "The store is 1.16 miles away, which is within the 2-mile range.",
+                    "q5": "There is no speed or delivery time requirement in the query.",
+                    "q6": "There is no quality or rating requirement in the query.",
+                    "q7": "No explicit dietary need is mentioned in the query.",
+                    "q8": "The menu aligns with the customer's preferences for Asian cuisine, light salads, and customizable, health-conscious meals.",
+                    "q9": "The customer has no strict dietary avoids, and the menu offers multiple vegetarian/vegan options that avoid red meat and heavy elements."
+                  }
+                },
+                "score_pct": 80.0,
+                "earned_weight": 8,
+                "total_weight": 10,
+                "intent_match_score": 60.0,
+                "is_relevant": true,
+                "answers": {
+                  "q1": "Yes",
+                  "q2": "No",
+                  "q3": "NA",
+                  "q4": "Yes",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "320587",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "No",
+                    "c2_primary_focus_3plus_items": "No",
+                    "c3_primary_offering_in_profile": "No"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "No"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "No"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "No"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "No"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "NA"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "No"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "Yes"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "No"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "No grilled chicken salad or similar dish is present on the menu.",
+                    "c2": "There are no grilled chicken salads or similar salads; salads are vegetarian or vegan.",
+                    "c3": "The merchant profile focuses on vegetarian Thai/Isaan cuisine, not grilled chicken salad.",
+                    "c4": "No menu item combines grilled chicken salad with dietary restrictions.",
+                    "c5": "The store name does not match 'grilled chicken salad' or any related query.",
+                    "c6": "The cuisine is Thai/vegetarian, not American or salad-focused.",
+                    "c7": "No grilled chicken salad or similar item with relevant flavors is present.",
+                    "c8": "No grilled or chicken-based salad preparation style is available.",
+                    "c9": "No reviews are available to assess portion size.",
+                    "c10": "No information about platters or large group offerings.",
+                    "c11": "No menu item contains both grilled chicken and salad ingredients.",
+                    "c12": "The store is within 2 miles of the user.",
+                    "c13": "ETA is 56 minutes, which is not fast.",
+                    "c14": "No ratings are available for the store or items.",
+                    "c15": "No price information is available.",
+                    "c16": "No deals or promotions are mentioned.",
+                    "c17": "Store open status is unknown, so cannot confirm it is open.",
+                    "c18": "No rating is available, so it is considered below 4.5.",
+                    "c19": "No item matches all modifiers (grilled, chicken, salad, refreshing, light)."
+                  }
+                },
+                "score_pct": 5.71,
+                "earned_weight": 2,
+                "total_weight": 35,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "No",
+                  "c2": "No",
+                  "c3": "No",
+                  "c4": "No",
+                  "c5": "No",
+                  "c6": "No",
+                  "c7": "No",
+                  "c8": "No",
+                  "c9": "NA",
+                  "c10": "NA",
+                  "c11": "No",
+                  "c12": "Yes",
+                  "c13": "No",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 42.85
+            },
+            {
+              "store_id": "35079",
+              "fuzzy_evaluation": {
+                "store_id": "35079",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "No",
+                    "q2_covers_all_modifiers": "No"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "No",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "No",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The fuzzy query 'some refreshing and light' (structured as 'grilled chicken salad') seeks a light, fresh, salad-based meal. The menu is meat-heavy, with no salads or light, refreshing options; mains are mostly grilled meats and heavy sides.",
+                    "q2": "The query implies both 'refreshing' and 'light' (e.g., salad, fresh vegetables). The menu does not offer salads or vegetable-forward mains, so it does not cover all modifiers.",
+                    "q3": "No price information is provided for menu items or store, so this is not applicable.",
+                    "q4": "The store is over 3 miles away, which is not within a 2-mile range.",
+                    "q5": "No speed or delivery time requirement is present in the query.",
+                    "q6": "No quality or rating requirement is present in the query.",
+                    "q7": "No explicit dietary need (e.g., vegan, gluten-free) is present in the query.",
+                    "q8": "Customer prefers Asian, Mediterranean, and customizable salads/bowls with fresh, light ingredients. This menu is American Southern, meat-focused, and lacks salads or customizable, light options.",
+                    "q9": "Customer has no strict hard avoids, and the menu offers several chicken and turkey mains that avoid red meat and pork, aligning with their lighter protein preferences."
+                  }
+                },
+                "score_pct": 20.0,
+                "earned_weight": 2,
+                "total_weight": 10,
+                "intent_match_score": 0.0,
+                "is_relevant": false,
+                "answers": {
+                  "q1": "No",
+                  "q2": "No",
+                  "q3": "NA",
+                  "q4": "No",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "No",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "35079",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "No",
+                    "c2_primary_focus_3plus_items": "No",
+                    "c3_primary_offering_in_profile": "No"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "No"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "Yes"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "No"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "No"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "Yes"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "No"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "No"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "No"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "No grilled chicken salad or salad items are listed on the menu.",
+                    "c2": "There are no salad items, and grilled chicken is only present as a main dish, not as a salad.",
+                    "c3": "The merchant profile does not mention salads or grilled chicken salad as a primary offering.",
+                    "c4": "No menu item combines grilled chicken with salad or meets common dietary restrictions for salads.",
+                    "c5": "The store name does not match any query for 'grilled chicken salad.'",
+                    "c6": "The cuisine is American/Southern, which is somewhat similar to what might serve grilled chicken, but not specifically salads.",
+                    "c7": "No menu item is a grilled chicken salad or has the refreshing/light flavor profile expected.",
+                    "c8": "No menu item is a salad or has a grilled chicken salad preparation style.",
+                    "c9": "No reviews are available to assess portion size.",
+                    "c10": "There are platters and trays (e.g., Collard Greens Tray), indicating some large group options.",
+                    "c11": "No menu item combines grilled chicken with salad ingredients.",
+                    "c12": "The store is over 3 miles away, not within 2 miles.",
+                    "c13": "ETA is 58 minutes, which does not meet any fast/quick requirement.",
+                    "c14": "No ratings are available for the store or items.",
+                    "c15": "No price information is available.",
+                    "c16": "No deals or promotions are mentioned.",
+                    "c17": "Store open status is unknown, so it cannot be confirmed as open.",
+                    "c18": "No rating is available, so it is considered below 4.5.",
+                    "c19": "No menu item matches all modifiers (grilled, chicken, salad, refreshing/light)."
+                  }
+                },
+                "score_pct": 10.81,
+                "earned_weight": 4,
+                "total_weight": 37,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "No",
+                  "c2": "No",
+                  "c3": "No",
+                  "c4": "No",
+                  "c5": "No",
+                  "c6": "Yes",
+                  "c7": "No",
+                  "c8": "No",
+                  "c9": "NA",
+                  "c10": "Yes",
+                  "c11": "No",
+                  "c12": "No",
+                  "c13": "No",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 15.41
+            },
+            {
+              "store_id": "352428",
+              "fuzzy_evaluation": {
+                "store_id": "352428",
+                "evaluation": {
+                  "intent_match": {
+                    "q1_menu_matches_query_intent": "Yes",
+                    "q2_covers_all_modifiers": "No"
+                  },
+                  "constraints": {
+                    "q3_price_limit_met": "NA",
+                    "q4_location_within_range": "Yes",
+                    "q5_speed_requirement_met": "NA",
+                    "q6_quality_rating_met": "NA",
+                    "q7_dietary_need_met": "NA"
+                  },
+                  "personalization": {
+                    "q8_matches_customer_preferences": "Yes",
+                    "q9_avoids_customer_hard_avoids": "Yes"
+                  },
+                  "reasoning": {
+                    "q1": "The menu includes light and refreshing options such as fruit salad, yogurt drinks, and poke bowls, which match the intent of 'some refreshing and light.'",
+                    "q2": "The structured query specifies 'grilled chicken salad,' but the menu does not offer a grilled chicken salad or a direct equivalent; closest are poke bowls and fruit salad, but not with grilled chicken.",
+                    "q3": "No price information is provided for menu items or store, so this is not applicable.",
+                    "q4": "The store is 1.72 miles away, which is within the 2-mile range.",
+                    "q5": "There is no speed or delivery time requirement in the query.",
+                    "q6": "There is no quality or rating requirement in the query.",
+                    "q7": "There is no explicit dietary need in the query.",
+                    "q8": "The menu aligns with the customer's preferences for Asian cuisine, light and customizable meals, poke bowls, and fresh ingredients.",
+                    "q9": "The customer has no strict dietary avoids, but prefers lean proteins and light meals; the menu offers several options (poke bowls, fruit salad, yogurt) that avoid heavy or red meat-based dishes."
+                  }
+                },
+                "score_pct": 80.0,
+                "earned_weight": 8,
+                "total_weight": 10,
+                "intent_match_score": 60.0,
+                "is_relevant": true,
+                "answers": {
+                  "q1": "Yes",
+                  "q2": "No",
+                  "q3": "NA",
+                  "q4": "Yes",
+                  "q5": "NA",
+                  "q6": "NA",
+                  "q7": "NA",
+                  "q8": "Yes",
+                  "q9": "Yes"
+                }
+              },
+              "structured_evaluation": {
+                "store_id": "352428",
+                "evaluation": {
+                  "main_dish_cuisine": {
+                    "c1_serves_dish_or_cuisine": "No",
+                    "c2_primary_focus_3plus_items": "No",
+                    "c3_primary_offering_in_profile": "No"
+                  },
+                  "dietary_restrictions": {
+                    "c4_meets_dietary_with_dish": "No"
+                  },
+                  "store_name": {
+                    "c5_exact_store_match": "No",
+                    "c6_similar_store_cuisine": "No"
+                  },
+                  "flavor": {
+                    "c7_has_dish_with_flavor": "No"
+                  },
+                  "prep_style": {
+                    "c8_has_dish_with_prep_style": "No"
+                  },
+                  "portion": {
+                    "c9_large_portions_in_reviews": "NA"
+                  },
+                  "group": {
+                    "c10_offers_large_quantities": "No"
+                  },
+                  "ingredients": {
+                    "c11_has_dish_with_ingredients": "No"
+                  },
+                  "location": {
+                    "c12_within_2_miles": "Yes"
+                  },
+                  "speed": {
+                    "c13_meets_speed_requirement": "No"
+                  },
+                  "quality": {
+                    "c14_good_ratings": "No"
+                  },
+                  "price": {
+                    "c15_meets_price_requirement": "NA"
+                  },
+                  "deals": {
+                    "c16_has_relevant_deals": "NA"
+                  },
+                  "store_open": {
+                    "c17_is_store_open": "No"
+                  },
+                  "store_rating": {
+                    "c18_rating_above_4_5": "No"
+                  },
+                  "all_modifiers": {
+                    "c19_matches_all_modifiers": "No"
+                  },
+                  "reasoning": {
+                    "c1": "No grilled chicken salad or similar dish is present on the menu.",
+                    "c2": "There are no grilled chicken salad items or similar salads; focus is on Asian fusion, poke bowls, and yogurt drinks.",
+                    "c3": "The merchant profile does not mention grilled chicken salad or similar salads as a primary offering.",
+                    "c4": "No menu item matches both grilled chicken salad and dietary restrictions.",
+                    "c5": "The store name does not match any grilled chicken salad-specific restaurant.",
+                    "c6": "The cuisine is Asian fusion, not similar to a typical grilled chicken salad restaurant.",
+                    "c7": "No menu item combines grilled chicken salad with any specific flavor profile relevant to the query.",
+                    "c8": "No menu item matches the grilled chicken salad preparation style.",
+                    "c9": "No reviews are available, so portion size cannot be determined.",
+                    "c10": "No evidence of platters, family packs, or catering options for large groups.",
+                    "c11": "No menu item contains both grilled chicken and salad ingredients.",
+                    "c12": "The store is within 2 miles of the user.",
+                    "c13": "The ETA is 49 minutes, which does not meet any fast/quick requirement.",
+                    "c14": "No ratings are available for the store or items.",
+                    "c15": "No price information is available.",
+                    "c16": "No deals or promotions are mentioned.",
+                    "c17": "Store open status is unknown, so it cannot be confirmed as open.",
+                    "c18": "No rating is available, so it is considered below 4.5.",
+                    "c19": "No menu item matches all required modifiers (grilled chicken salad, refreshing, light)."
+                  }
+                },
+                "score_pct": 5.41,
+                "earned_weight": 2,
+                "total_weight": 37,
+                "critical_failures": [
+                  "Store is closed",
+                  "Rating \u2264 4.5",
+                  "Missing modifiers"
+                ],
+                "answers": {
+                  "c1": "No",
+                  "c2": "No",
+                  "c3": "No",
+                  "c4": "No",
+                  "c5": "No",
+                  "c6": "No",
+                  "c7": "No",
+                  "c8": "No",
+                  "c9": "NA",
+                  "c10": "No",
+                  "c11": "No",
+                  "c12": "Yes",
+                  "c13": "No",
+                  "c14": "No",
+                  "c15": "NA",
+                  "c16": "NA",
+                  "c17": "No",
+                  "c18": "No",
+                  "c19": "No"
+                }
+              },
+              "combined_score": 42.7
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
