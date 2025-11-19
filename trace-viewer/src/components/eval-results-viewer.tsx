@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useState, useMemo, useEffect } from "react";
-import Papa from "papaparse";
 import {
   AlertCircle,
   BarChart3,
@@ -583,34 +582,16 @@ const EvalResultsViewer = () => {
     const nameMap = new Map<string, string>();
 
     try {
-      // Load from CSV file
-      const csvResponse = await fetch("/data/om-trace-zesty.csv");
-      if (csvResponse.ok) {
-        const csvText = await csvResponse.text();
-
-        await new Promise<void>((resolve) => {
-          Papa.parse(csvText, {
-            header: true,
-            complete: (results) => {
-              (results.data as Array<Record<string, unknown>>).forEach((row) => {
-                const conversationJson = row.CONVERSATION_JSON as string;
-                if (!conversationJson) return;
-
-                try {
-                  const conversation = JSON.parse(conversationJson);
-                  extractStoreNamesFromConversation(conversation, nameMap);
-                } catch (error) {
-                  // Skip invalid JSON rows
-                }
-              });
-              resolve();
-            },
-            error: () => resolve()
-          });
+      // Load from pre-built store names map (fastest method)
+      const mapResponse = await fetch("/data/store_names_map.json");
+      if (mapResponse.ok) {
+        const storeMapData = await mapResponse.json();
+        Object.entries(storeMapData).forEach(([id, name]) => {
+          nameMap.set(id, name as string);
         });
       }
     } catch (error) {
-      console.warn("Failed to fetch CSV:", error);
+      console.warn("Failed to fetch store names map:", error);
     }
 
     try {
