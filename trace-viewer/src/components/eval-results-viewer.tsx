@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState, useMemo, useEffect } from "react";
+import Papa from "papaparse";
 import {
   AlertCircle,
   BarChart3,
@@ -230,7 +231,7 @@ const MetricCard = ({
   </div>
 );
 
-const StoreEvaluationCard = ({ store }: { store: StoreEvaluation }) => {
+const StoreEvaluationCard = ({ store, storeName }: { store: StoreEvaluation; storeName?: string }) => {
   const [expanded, setExpanded] = useState(false);
   const [viewMode, setViewMode] = useState<"fuzzy" | "structured" | "both">("both");
 
@@ -254,7 +255,16 @@ const StoreEvaluationCard = ({ store }: { store: StoreEvaluation }) => {
             <ChevronRight className="h-4 w-4 text-black/40" />
           )}
           <div>
-            <p className="font-medium text-black">Store {store.store_id}</p>
+            <p className="font-medium text-black">
+              {storeName ? (
+                <>
+                  {storeName}
+                  <span className="ml-2 text-sm font-normal text-black/50">#{store.store_id}</span>
+                </>
+              ) : (
+                `Store ${store.store_id}`
+              )}
+            </p>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-sm">
               <span className={cn("font-semibold", getScoreColor(store.combined_score))}>
                 Combined: {store.combined_score.toFixed(1)}%
@@ -460,7 +470,7 @@ const StoreEvaluationCard = ({ store }: { store: StoreEvaluation }) => {
   );
 };
 
-const TraceEvaluationCard = ({ trace }: { trace: TraceEvaluation }) => {
+const TraceEvaluationCard = ({ trace, storeNames }: { trace: TraceEvaluation; storeNames: Map<string, string> }) => {
   const [expanded, setExpanded] = useState(false);
 
   if (trace.error && !trace.store_evaluations) {
@@ -520,7 +530,11 @@ const TraceEvaluationCard = ({ trace }: { trace: TraceEvaluation }) => {
       {expanded && trace.store_evaluations && (
         <div className="mt-4 space-y-3 border-t border-black/10 pt-4">
           {trace.store_evaluations.map((store, idx) => (
-            <StoreEvaluationCard key={`${store.store_id}-${idx}`} store={store} />
+            <StoreEvaluationCard
+              key={`${store.store_id}-${idx}`}
+              store={store}
+              storeName={storeNames.get(store.store_id)}
+            />
           ))}
         </div>
       )}
@@ -535,6 +549,7 @@ const EvalResultsViewer = () => {
   const [sourceLabel, setSourceLabel] = useState("Loading results...");
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedConvs, setExpandedConvs] = useState<Set<string>>(new Set());
+  const [storeNames, setStoreNames] = useState<Map<string, string>>(new Map());
 
   // Score filtering state
   const [fuzzyMin, setFuzzyMin] = useState<number>(0);
@@ -542,6 +557,110 @@ const EvalResultsViewer = () => {
   const [structuredMin, setStructuredMin] = useState<number>(0);
   const [structuredMax, setStructuredMax] = useState<number>(100);
   const [showFilters, setShowFilters] = useState(false);
+
+  const extractStoreNamesFromConversation = (conversation: any, nameMap: Map<string, string>) => {
+    const traces = conversation.traces || [];
+
+    traces.forEach((trace: any) => {
+      const storeRecs = trace.store_recommendations || [];
+
+      storeRecs.forEach((carousel: any) => {
+        const stores = carousel.stores || [];
+
+        stores.forEach((store: any) => {
+          const storeId = store.business_id?.toString();
+          const storeName = store.store_name;
+
+          if (storeId && storeName && !nameMap.has(storeId)) {
+            nameMap.set(storeId, storeName);
+          }
+        });
+      });
+    });
+  };
+
+  const loadStoreNames = useCallback(async () => {
+    const nameMap = new Map<string, string>();
+
+    try {
+      // Load from CSV file
+      const csvResponse = await fetch("/data/om-trace-zesty.csv");
+      if (csvResponse.ok) {
+        const csvText = await csvResponse.text();
+
+        await new Promise<void>((resolve) => {
+          Papa.parse(csvText, {
+            header: true,
+            complete: (results) => {
+              (results.data as Array<Record<string, unknown>>).forEach((row) => {
+                const conversationJson = row.CONVERSATION_JSON as string;
+                if (!conversationJson) return;
+
+                try {
+                  const conversation = JSON.parse(conversationJson);
+                  extractStoreNamesFromConversation(conversation, nameMap);
+                } catch (error) {
+                  // Skip invalid JSON rows
+                }
+              });
+              resolve();
+            },
+            error: () => resolve()
+          });
+        });
+      }
+    } catch (error) {
+      console.warn("Failed to fetch CSV:", error);
+    }
+
+    try {
+      // Load from sample traces
+      const sampleResponse = await fetch("/data/sample_traces.json");
+      if (sampleResponse.ok) {
+        const sampleData = await sampleResponse.json();
+        if (Array.isArray(sampleData)) {
+          sampleData.forEach((conversation: any) => {
+            extractStoreNamesFromConversation(conversation, nameMap);
+          });
+        }
+      }
+    } catch (error) {
+      console.warn("Failed to fetch sample traces:", error);
+    }
+
+    try {
+      // Load from trace manifest to get all chunk files
+      const manifestResponse = await fetch("/data/traces/traces_manifest.json");
+      if (manifestResponse.ok) {
+        const manifest = await manifestResponse.json();
+        const chunks = manifest.chunks || [];
+
+        // Load all chunk files in parallel
+        const chunkPromises = chunks.map(async (chunk: any) => {
+          try {
+            const filename = chunk.filename || chunk;
+            const chunkResponse = await fetch(`/data/traces/${filename}`);
+            if (chunkResponse.ok) {
+              const chunkData = await chunkResponse.json();
+              if (Array.isArray(chunkData)) {
+                chunkData.forEach((conversation: any) => {
+                  extractStoreNamesFromConversation(conversation, nameMap);
+                });
+              }
+            }
+          } catch (error) {
+            console.warn(`Failed to fetch chunk ${chunk.filename || chunk}:`, error);
+          }
+        });
+
+        await Promise.all(chunkPromises);
+      }
+    } catch (error) {
+      console.warn("Failed to fetch trace chunks:", error);
+    }
+
+    setStoreNames(nameMap);
+  }, []);
 
   const loadDefaultResults = useCallback(async () => {
     setIsLoading(true);
@@ -561,7 +680,8 @@ const EvalResultsViewer = () => {
 
   useEffect(() => {
     loadDefaultResults();
-  }, [loadDefaultResults]);
+    loadStoreNames();
+  }, [loadDefaultResults, loadStoreNames]);
 
   const handleUpload: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
     const file = event.target.files?.[0];
@@ -964,7 +1084,7 @@ const EvalResultsViewer = () => {
                 {expandedConvs.has(conv.conversation_id) && conv.trace_evaluations && (
                   <div className="mt-4 space-y-3 border-t border-black/10 pt-4">
                     {conv.trace_evaluations.map((trace, idx) => (
-                      <TraceEvaluationCard key={`${trace.trace_id}-${idx}`} trace={trace} />
+                      <TraceEvaluationCard key={`${trace.trace_id}-${idx}`} trace={trace} storeNames={storeNames} />
                     ))}
                   </div>
                 )}
