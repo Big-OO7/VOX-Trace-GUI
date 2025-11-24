@@ -1863,7 +1863,7 @@ const TraceDashboard = () => {
                                           const fuzzyGrades = fuzzyGradingLookup.get(fuzzyKey) || [];
                                           // Find grade matching this rewrite text
                                           const fuzzyGrade = fuzzyGrades.find(g =>
-                                            g.recommendation.toLowerCase().trim() === rewrite.rewritten_query.toLowerCase().trim()
+                                            g.recommendation.toLowerCase().trim() === rewrite.rewritten_query?.toLowerCase().trim()
                                           );
 
                                           return (
