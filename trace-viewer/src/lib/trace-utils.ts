@@ -23,6 +23,56 @@ export interface TraceStoreMenuItem {
   [key: string]: unknown;
 }
 
+export interface GradingScores {
+  is_serving_matched?: "Yes" | "No" | "NA to Query";
+  is_serving_more_than_three_items?: "Yes" | "No" | "NA to Query";
+  is_primary_serving?: "Yes" | "No" | "NA to Query";
+  is_dietary_serving?: "Yes" | "No" | "NA to Query";
+  is_flavor_match?: "Yes" | "No" | "NA to Query";
+  is_ingredient_present?: "Yes" | "No" | "NA to Query";
+  is_prep_style_matched?: "Yes" | "No" | "NA to Query";
+  is_exact_restaurant?: "Yes" | "No" | "NA to Query";
+  is_similar_restaurant?: "Yes" | "No" | "NA to Query";
+  is_portion_matched?: "Yes" | "No" | "NA to Query";
+  is_group_matched?: "Yes" | "No" | "NA to Query";
+  is_nearby?: "Yes" | "No" | "NA to Query";
+  is_fast_delivery?: "Yes" | "No" | "NA to Query";
+  is_top_rated?: "Yes" | "No" | "NA to Query";
+  is_overall_rating_good?: "Yes" | "No" | "NA to Query";
+  is_store_open?: "Yes" | "No" | "NA to Query";
+  is_price_match?: "Yes" | "No" | "NA to Query";
+  is_fast_delivery_check?: "Yes" | "No" | "NA to Query";
+}
+
+export interface GradingResult {
+  conversation_id: string;
+  trace_index: number;
+  rewrite_id: string;
+  carousel_index: number;
+  query: string;
+  original_query: string;
+  store_id: string;
+  store_name: string;
+  scores: GradingScores;
+  weighted_score_pct: number;
+  earned_pts: number;
+  applicable_pts: number;
+  label: "relevant" | "not_relevant";
+  rationale: string;
+  error: string | null;
+}
+
+export interface GradingMetadata {
+  total_tasks: number;
+  timestamp: string;
+  score_mapping: Record<string, number>;
+}
+
+export interface GradingData {
+  metadata: GradingMetadata;
+  results: GradingResult[];
+}
+
 export interface TraceStore {
   store_name?: string;
   business_id?: string;
@@ -32,6 +82,7 @@ export interface TraceStore {
   distance_miles?: string;
   dietary_options?: string;
   menu_items?: TraceStoreMenuItem[];
+  grading?: GradingResult;
   [key: string]: unknown;
 }
 

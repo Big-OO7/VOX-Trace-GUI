@@ -18,6 +18,8 @@ import type {
   TraceRecord,
   TraceStore,
   TraceStoreMenuItem,
+  GradingData,
+  GradingResult,
 } from "@/lib/trace-utils";
 import { buildTraceRecords } from "@/lib/trace-utils";
 
@@ -135,16 +137,37 @@ const TimelineItem = ({
 
 const StoreCard = ({ store, onDoubleClick }: { store: TraceStore; onDoubleClick?: (store: TraceStore) => void }) => {
   const primaryItems = (store.menu_items ?? []).slice(0, 3);
+  const grading = store.grading;
+
+  // Determine border color based on grading score
+  let borderClass = "border-black/10";
+  if (grading) {
+    const score = grading.weighted_score_pct;
+    if (score >= 80) borderClass = "border-green-300";
+    else if (score >= 60) borderClass = "border-yellow-300";
+    else if (score >= 40) borderClass = "border-orange-300";
+    else borderClass = "border-red-300";
+  }
+
   return (
     <div
-      className="rounded-lg border border-black/10 bg-white p-5 transition hover:border-black/30 cursor-pointer"
+      className={`rounded-lg border ${borderClass} bg-white p-5 transition hover:border-black/30 cursor-pointer`}
       onDoubleClick={() => onDoubleClick?.(store)}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <p className="font-semibold text-black">
-            {store.store_name ?? "Unnamed store"}
-          </p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="font-semibold text-black">
+              {store.store_name ?? "Unnamed store"}
+            </p>
+            {grading ? (
+              <GradingBadge grading={grading} />
+            ) : (
+              <span className="rounded-md bg-gray-100 border border-gray-200 px-2 py-0.5 text-xs text-gray-500">
+                No Grade
+              </span>
+            )}
+          </div>
           {store.cuisine && (
             <p className="mt-0.5 text-sm text-black/60">{store.cuisine}</p>
           )}
@@ -196,6 +219,265 @@ const EmptyState = ({ message }: { message: string }) => (
     </p>
   </div>
 );
+
+const GradingBadge = ({ grading }: { grading: GradingResult }) => {
+  const score = grading.weighted_score_pct;
+  const isRelevant = grading.label === "relevant";
+
+  // Color coding based on score ranges
+  let bgColor = "bg-red-100";
+  let textColor = "text-red-800";
+  let borderColor = "border-red-200";
+
+  if (score >= 80) {
+    bgColor = "bg-green-100";
+    textColor = "text-green-800";
+    borderColor = "border-green-200";
+  } else if (score >= 60) {
+    bgColor = "bg-yellow-100";
+    textColor = "text-yellow-800";
+    borderColor = "border-yellow-200";
+  } else if (score >= 40) {
+    bgColor = "bg-orange-100";
+    textColor = "text-orange-800";
+    borderColor = "border-orange-200";
+  }
+
+  return (
+    <div className={`rounded-md border ${borderColor} ${bgColor} px-2 py-1`}>
+      <div className="flex items-center gap-1.5">
+        <span className={`text-xs font-bold ${textColor}`}>
+          {score.toFixed(0)}%
+        </span>
+        <span className={`text-xs ${textColor} opacity-60`}>
+          {isRelevant ? "✓" : "✗"}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const GradingDetailPanel = ({ grading }: { grading: GradingResult }) => {
+  const [expandedCriterion, setExpandedCriterion] = useState<string | null>(null);
+  const score = grading.weighted_score_pct;
+  const isRelevant = grading.label === "relevant";
+
+  // Score color for overall display
+  let scoreColor = "text-red-600";
+  if (score >= 80) scoreColor = "text-green-600";
+  else if (score >= 60) scoreColor = "text-yellow-600";
+  else if (score >= 40) scoreColor = "text-orange-600";
+
+  // Helper to format criterion name
+  const formatCriterion = (key: string) => {
+    return key.replace(/_/g, " ").replace(/^is /, "").split(" ").map(
+      word => word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(" ");
+  };
+
+  // Get score icon
+  const getScoreIcon = (value: string) => {
+    if (value === "Yes") return <span className="text-green-600">✓</span>;
+    if (value === "No") return <span className="text-red-600">✗</span>;
+    return <span className="text-gray-400">—</span>;
+  };
+
+  // Get explanation for each criterion based on the overall rationale and store data
+  const getCriterionExplanation = (key: string, value: string) => {
+    const explanations: Record<string, string> = {
+      is_serving_matched: value === "Yes"
+        ? "The store's menu includes items that match the primary food type requested in the query."
+        : value === "No"
+        ? "The store's menu does not include items matching the primary food type in the query."
+        : "This criterion is not applicable to the current query type.",
+      is_serving_more_than_three_items: value === "Yes"
+        ? "The store offers at least 3 different items that match the query, providing good variety."
+        : value === "No"
+        ? "The store has fewer than 3 matching items, limiting customer choice."
+        : "Not applicable - query doesn't require multiple item availability.",
+      is_primary_serving: value === "Yes"
+        ? "The matched items are among the store's primary/signature offerings."
+        : value === "No"
+        ? "The matched items are not primary offerings of this store."
+        : "Not applicable to this query context.",
+      is_dietary_serving: value === "Yes"
+        ? "The store accommodates dietary restrictions or preferences mentioned in the query."
+        : value === "No"
+        ? "The store does not adequately meet the dietary requirements specified."
+        : "No specific dietary requirements in the query.",
+      is_flavor_match: value === "Yes"
+        ? "Menu items match the flavor profile or taste preferences indicated in the query."
+        : value === "No"
+        ? "Flavor profiles don't align with query specifications."
+        : "Query doesn't specify flavor preferences.",
+      is_ingredient_present: value === "Yes"
+        ? "The specific ingredients requested are present in the store's menu items."
+        : value === "No"
+        ? "Required ingredients are not available or present in menu offerings."
+        : "No specific ingredients were requested in the query.",
+      is_prep_style_matched: value === "Yes"
+        ? "The preparation style (e.g., grilled, fried, baked) matches the query."
+        : value === "No"
+        ? "Preparation styles don't match what was requested."
+        : "Query doesn't specify preparation preferences.",
+      is_exact_restaurant: value === "Yes"
+        ? "This is the exact restaurant/store mentioned in the query."
+        : value === "No"
+        ? "This is not the specific restaurant requested."
+        : "Query didn't request a specific restaurant by name.",
+      is_similar_restaurant: value === "Yes"
+        ? "This store is similar in type/cuisine to what was requested, even if not exact."
+        : value === "No"
+        ? "Store type differs from what was implied in the query."
+        : "Not applicable - exact match was found or not relevant.",
+      is_portion_matched: value === "Yes"
+        ? "Portion sizes align with any specifications in the query (e.g., large, family-size)."
+        : value === "No"
+        ? "Portion sizes don't match the requirements."
+        : "No portion specifications in the query.",
+      is_group_matched: value === "Yes"
+        ? "The store is suitable for group dining or party orders as indicated in the query."
+        : value === "No"
+        ? "Not suitable for the group size or occasion mentioned."
+        : "Query doesn't indicate group or party dining needs.",
+      is_nearby: value === "Yes"
+        ? `Store is located nearby (${grading.store_name} - check distance in store details).`
+        : value === "No"
+        ? "Store is located far from the delivery location."
+        : "Location proximity wasn't a factor in this query.",
+      is_fast_delivery: value === "Yes"
+        ? "Store offers quick delivery time meeting user expectations."
+        : value === "No"
+        ? "Delivery time is longer than optimal."
+        : "Delivery speed wasn't specified as a requirement.",
+      is_top_rated: value === "Yes"
+        ? "Store has high customer ratings indicating quality and reliability."
+        : value === "No"
+        ? "Store ratings are below the threshold for 'top rated' status."
+        : "Rating quality wasn't a consideration for this query.",
+      is_overall_rating_good: value === "Yes"
+        ? "Store maintains good overall customer satisfaction ratings."
+        : value === "No"
+        ? "Store has lower customer satisfaction ratings."
+        : "Overall rating wasn't evaluated for this match.",
+      is_store_open: value === "Yes"
+        ? "Store is currently open and accepting orders."
+        : value === "No"
+        ? "Store is currently closed or not accepting orders."
+        : "Store hours weren't a factor in evaluation.",
+      is_price_match: value === "Yes"
+        ? "Store's price range aligns with budget expectations from the query."
+        : value === "No"
+        ? "Store pricing doesn't match the indicated budget level."
+        : "Price sensitivity wasn't specified in the query.",
+      is_fast_delivery_check: value === "Yes"
+        ? "Delivery speed check confirms quick delivery capability."
+        : value === "No"
+        ? "Delivery speed doesn't meet fast delivery criteria."
+        : "Fast delivery wasn't required for this query.",
+    };
+
+    return explanations[key] || "Evaluation reasoning for this criterion.";
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Overall Score */}
+      <div className="rounded-lg border border-black/10 bg-gradient-to-br from-black/[0.02] to-black/[0.05] p-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-black/50">Overall Score</h3>
+            <p className={`text-4xl font-bold ${scoreColor} mt-1`}>{score.toFixed(1)}%</p>
+            <p className="text-sm text-black/60 mt-1">
+              {grading.earned_pts.toFixed(1)} / {grading.applicable_pts.toFixed(1)} points
+            </p>
+          </div>
+          <div className={`rounded-full px-6 py-3 ${isRelevant ? "bg-green-100" : "bg-red-100"}`}>
+            <span className={`text-lg font-bold ${isRelevant ? "text-green-800" : "text-red-800"}`}>
+              {isRelevant ? "RELEVANT" : "NOT RELEVANT"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Query Context */}
+      <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-black/50 mb-2">Query Context</h3>
+        <div className="space-y-2">
+          <div>
+            <span className="text-xs text-black/50">Original Query:</span>
+            <p className="text-sm font-medium text-black">{grading.original_query}</p>
+          </div>
+          {grading.query !== grading.original_query && (
+            <div>
+              <span className="text-xs text-black/50">Rewritten Query:</span>
+              <p className="text-sm font-medium text-black">{grading.query}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Rationale */}
+      <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-black/50 mb-2">Rationale</h3>
+        <p className="text-sm text-black/80 leading-relaxed">{grading.rationale}</p>
+      </div>
+
+      {/* Detailed Scores */}
+      <div className="rounded-lg border border-black/10 bg-white p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-black/50 mb-3">Detailed Scores</h3>
+        <div className="grid grid-cols-1 gap-1">
+          {Object.entries(grading.scores).map(([key, value]) => {
+            const isExpanded = expandedCriterion === key;
+            return (
+              <div key={key} className="border-b border-black/5 last:border-0">
+                <button
+                  onClick={() => setExpandedCriterion(isExpanded ? null : key)}
+                  className="w-full flex items-center justify-between py-2 hover:bg-black/[0.02] transition px-2 rounded"
+                >
+                  <span className="text-sm text-black/70 flex items-center gap-2">
+                    <span className="text-xs text-black/30">{isExpanded ? "▼" : "▶"}</span>
+                    {formatCriterion(key)}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {getScoreIcon(value as string)}
+                    <span className="text-xs text-black/40">{value}</span>
+                  </div>
+                </button>
+                {isExpanded && (
+                  <div className="px-2 pb-3 pt-1">
+                    <div className="rounded bg-black/[0.02] p-3 text-xs text-black/70 leading-relaxed border-l-2 border-black/10">
+                      <p className="font-medium text-black/50 mb-1">Chain of Thought:</p>
+                      <p>{getCriterionExplanation(key, value as string)}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Metadata */}
+      <div className="rounded-lg border border-black/10 bg-black/[0.02] p-3">
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          <div>
+            <span className="text-black/50">Trace Index:</span>
+            <span className="ml-2 font-mono text-black">{grading.trace_index}</span>
+          </div>
+          <div>
+            <span className="text-black/50">Carousel:</span>
+            <span className="ml-2 font-mono text-black">{grading.carousel_index}</span>
+          </div>
+          <div className="col-span-2">
+            <span className="text-black/50">Rewrite ID:</span>
+            <span className="ml-2 font-mono text-black text-[10px]">{grading.rewrite_id}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const StoreDetailModal = ({
   store,
@@ -266,6 +548,26 @@ const StoreDetailModal = ({
         </div>
 
         <div className="p-6 space-y-6">
+          {/* Grading Section */}
+          {store.grading ? (
+            <div>
+              <h3 className="text-lg font-bold text-black mb-3">Evaluation Results</h3>
+              <GradingDetailPanel grading={store.grading} />
+            </div>
+          ) : (
+            <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-semibold text-yellow-900">No Grading Available</h3>
+                  <p className="text-xs text-yellow-800 mt-1">
+                    This store has not been evaluated yet. Grading data may be unavailable for stores in certain carousels or queries.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Store Summary */}
           {storeAny.summary && (
             <div className="rounded-lg border border-black/10 bg-gradient-to-br from-black/[0.02] to-black/[0.05] p-4">
@@ -411,6 +713,8 @@ const TraceDashboard = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [selectedStoreDetail, setSelectedStoreDetail] = useState<TraceStore | null>(null);
   const [loadingProgress, setLoadingProgress] = useState<{ loaded: number; total: number } | null>(null);
+  const [gradingData, setGradingData] = useState<GradingData | null>(null);
+  const [gradingLookup, setGradingLookup] = useState<Map<string, GradingResult>>(new Map());
 
   const parseCsv = useCallback(
     (text: string, label: string) => {
@@ -478,6 +782,56 @@ const TraceDashboard = () => {
       }
     },
     [],
+  );
+
+  const loadGradingData = useCallback(async () => {
+    try {
+      const response = await fetch("/VOX_Metis_100_structured_grades.json");
+      if (!response.ok) {
+        console.warn("Grading data not found, continuing without grades");
+        return;
+      }
+      const data: GradingData = await response.json();
+      setGradingData(data);
+
+      // Build lookup map for O(1) access
+      // Key format: `${conversation_id}|${trace_index}|${rewrite_id}|${carousel_index}|${store_id}`
+      const lookup = new Map<string, GradingResult>();
+      for (const result of data.results) {
+        const key = `${result.conversation_id}|${result.trace_index}|${result.rewrite_id}|${result.carousel_index}|${result.store_id}`;
+        lookup.set(key, result);
+      }
+      setGradingLookup(lookup);
+      console.log(`Loaded ${data.results.length} grading results`);
+    } catch (error) {
+      console.warn("Failed to load grading data:", error);
+    }
+  }, []);
+
+  const attachGradingToStores = useCallback(
+    (
+      conversationId: string,
+      traceIndex: number,
+      rewriteId: string,
+      carouselIndex: number,
+      stores: TraceStore[]
+    ): TraceStore[] => {
+      if (gradingLookup.size === 0) return stores;
+
+      return stores.map((store) => {
+        const storeId = (store as any).store_id || store.business_id;
+        if (!storeId) return store;
+
+        const key = `${conversationId}|${traceIndex}|${rewriteId}|${carouselIndex}|${storeId}`;
+        const grading = gradingLookup.get(key);
+
+        if (grading) {
+          return { ...store, grading };
+        }
+        return store;
+      });
+    },
+    [gradingLookup]
   );
 
   const loadDemo = useCallback(async () => {
@@ -565,11 +919,55 @@ const TraceDashboard = () => {
 
   useEffect(() => {
     loadDemo();
-  }, [loadDemo]);
+    loadGradingData();
+  }, [loadDemo, loadGradingData]);
 
   const selectedRecord = records.find(
     (record) => record.conversationId === selectedId,
   );
+
+  // Enrich selectedRecord with grading data
+  const enrichedRecord = useMemo(() => {
+    if (!selectedRecord || gradingLookup.size === 0) return selectedRecord;
+
+    const enrichedTraces = selectedRecord.payload.traces?.map((trace, traceIndex) => {
+      const enrichedCarousels = trace.store_recommendations?.map((carousel, carouselIndex) => {
+        // Determine rewrite_id for this carousel
+        // For carousel_index 0, use "trace_{traceIndex}_rewrite_0" (original query)
+        // For carousel_index > 0, use the corresponding rewrite
+        let rewriteId = `trace_${traceIndex}_rewrite_0`;
+        if (carouselIndex > 0 && trace.rewritten_queries && trace.rewritten_queries.length >= carouselIndex) {
+          rewriteId = `trace_${traceIndex}_rewrite_${carouselIndex}`;
+        }
+
+        const enrichedStores = attachGradingToStores(
+          selectedRecord.conversationId,
+          traceIndex,
+          rewriteId,
+          carousel.carousel_index ?? carouselIndex,
+          carousel.stores ?? []
+        );
+
+        return {
+          ...carousel,
+          stores: enrichedStores,
+        };
+      });
+
+      return {
+        ...trace,
+        store_recommendations: enrichedCarousels,
+      };
+    });
+
+    return {
+      ...selectedRecord,
+      payload: {
+        ...selectedRecord.payload,
+        traces: enrichedTraces,
+      },
+    };
+  }, [selectedRecord, gradingLookup, attachGradingToStores]);
 
   useEffect(() => {
     if (
@@ -625,7 +1023,7 @@ const TraceDashboard = () => {
     };
   }, [records]);
 
-  const consumerProfile = selectedRecord?.payload.consumer_profile;
+  const consumerProfile = enrichedRecord?.payload.consumer_profile;
   const overallProfile =
     consumerProfile?.profile && typeof consumerProfile.profile === "object"
       ? (consumerProfile.profile as Record<string, unknown>)
@@ -645,7 +1043,7 @@ const TraceDashboard = () => {
       : undefined;
 
   const activeTrace: TraceDetail | undefined =
-    selectedRecord?.payload.traces?.[activeTraceIndex];
+    enrichedRecord?.payload.traces?.[activeTraceIndex];
 
   const handleUpload: React.ChangeEventHandler<HTMLInputElement> = async (
     event,
@@ -740,7 +1138,7 @@ const TraceDashboard = () => {
   };
 
   const showEmpty =
-    !isLoading && (!records.length || !selectedRecord || !filteredRecords.length);
+    !isLoading && (!records.length || !enrichedRecord || !filteredRecords.length);
 
   return (
     <div className="space-y-6">
@@ -866,7 +1264,7 @@ const TraceDashboard = () => {
             <EmptyState message="No conversation selected" />
           )}
 
-          {!showEmpty && selectedRecord && (
+          {!showEmpty && enrichedRecord && (
             <div className="space-y-6">
               {/* Conversation Header */}
               <div className="rounded-lg border border-black/10 bg-white p-6">
@@ -875,11 +1273,11 @@ const TraceDashboard = () => {
                     Conversation
                   </p>
                   <h2 className="mt-1 text-2xl font-bold text-black">
-                    {selectedRecord.conversationId}
+                    {enrichedRecord.conversationId}
                   </h2>
-                  {selectedRecord.payload.ids?.consumer_id && (
+                  {enrichedRecord.payload.ids?.consumer_id && (
                     <p className="mt-1 text-sm text-black/60">
-                      Consumer: {selectedRecord.payload.ids.consumer_id}
+                      Consumer: {enrichedRecord.payload.ids.consumer_id}
                     </p>
                   )}
                 </div>
@@ -890,7 +1288,7 @@ const TraceDashboard = () => {
                       Session ID
                     </p>
                     <p className="mt-1 text-sm font-mono text-black">
-                      {selectedRecord.payload.ids?.session_id ?? "—"}
+                      {enrichedRecord.payload.ids?.session_id ?? "—"}
                     </p>
                   </div>
                   <div>
@@ -898,7 +1296,7 @@ const TraceDashboard = () => {
                       Last Updated
                     </p>
                     <p className="mt-1 text-sm text-black">
-                      {formatDateTime(selectedRecord.payload.timestamps?.ending ?? "")}
+                      {formatDateTime(enrichedRecord.payload.timestamps?.ending ?? "")}
                     </p>
                   </div>
                 </div>
@@ -1003,11 +1401,11 @@ const TraceDashboard = () => {
               )}
 
               {/* Query Timeline */}
-              {selectedRecord.payload.query_log && (
+              {enrichedRecord.payload.query_log && (
                 <div className="rounded-lg border border-black/10 bg-white p-6">
                   <h3 className="mb-4 text-lg font-bold text-black">Query Timeline</h3>
                   <div className="space-y-0">
-                    {selectedRecord.payload.query_log.map((entry, index) => (
+                    {enrichedRecord.payload.query_log.map((entry, index) => (
                       <TimelineItem
                         key={`${entry.trace_id ?? index}-timeline`}
                         title={entry.original_query ?? "Unknown query"}
@@ -1026,13 +1424,13 @@ const TraceDashboard = () => {
               )}
 
               {/* Trace Explorer */}
-              {selectedRecord.payload.traces && selectedRecord.payload.traces.length > 0 && (
+              {enrichedRecord.payload.traces && enrichedRecord.payload.traces.length > 0 && (
                 <div className="rounded-lg border border-black/10 bg-white p-6">
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <h3 className="text-lg font-bold text-black">Trace Explorer</h3>
                       <span className="rounded-full bg-black/5 px-3 py-1 text-xs font-medium text-black">
-                        {selectedRecord.payload.traces.length} {selectedRecord.payload.traces.length === 1 ? 'trace' : 'traces'}
+                        {enrichedRecord.payload.traces.length} {enrichedRecord.payload.traces.length === 1 ? 'trace' : 'traces'}
                       </span>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
@@ -1047,7 +1445,7 @@ const TraceDashboard = () => {
                       >
                         {showAllTraces ? "Single View" : "All Traces"}
                       </button>
-                      {!showAllTraces && selectedRecord.payload.traces.map((_trace, index) => (
+                      {!showAllTraces && enrichedRecord.payload.traces.map((_trace, index) => (
                         <button
                           key={`trace-pill-${index}`}
                           onClick={() => setActiveTraceIndex(index)}
@@ -1066,7 +1464,7 @@ const TraceDashboard = () => {
 
                   {showAllTraces ? (
                     <div className="space-y-8">
-                      {selectedRecord.payload.traces.map((trace, traceIdx) => (
+                      {enrichedRecord.payload.traces.map((trace, traceIdx) => (
                         <div key={`all-trace-${traceIdx}`} className="relative">
                           {/* Trace Number Badge */}
                           <div className="mb-4 flex items-center gap-3">
@@ -1145,7 +1543,7 @@ const TraceDashboard = () => {
                           )}
 
                           {/* Divider between traces */}
-                          {selectedRecord.payload.traces && traceIdx < selectedRecord.payload.traces.length - 1 && (
+                          {enrichedRecord.payload.traces && traceIdx < enrichedRecord.payload.traces.length - 1 && (
                             <div className="mt-8 flex items-center gap-3 text-xs font-medium uppercase tracking-wider text-black/30">
                               <div className="h-px flex-1 bg-black/10" />
                               <span>Follow-up Trace</span>
