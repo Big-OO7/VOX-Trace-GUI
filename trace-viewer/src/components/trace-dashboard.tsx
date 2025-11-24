@@ -20,6 +20,8 @@ import type {
   TraceStoreMenuItem,
   GradingData,
   GradingResult,
+  FuzzyGradingData,
+  FuzzyGradingResult,
 } from "@/lib/trace-utils";
 import { buildTraceRecords } from "@/lib/trace-utils";
 
@@ -252,6 +254,292 @@ const GradingBadge = ({ grading }: { grading: GradingResult }) => {
         <span className={`text-xs ${textColor} opacity-60`}>
           {isRelevant ? "✓" : "✗"}
         </span>
+      </div>
+    </div>
+  );
+};
+
+const FuzzyGradeCard = ({ grade }: { grade: FuzzyGradingResult }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const score = grade.weighted_score_pct;
+  const isRelevant = grade.label === "relevant";
+
+  // Color coding based on score ranges
+  let bgColor = "bg-red-100";
+  let textColor = "text-red-800";
+  let borderColor = "border-red-200";
+
+  if (score >= 80) {
+    bgColor = "bg-green-100";
+    textColor = "text-green-800";
+    borderColor = "border-green-200";
+  } else if (score >= 60) {
+    bgColor = "bg-yellow-100";
+    textColor = "text-yellow-800";
+    borderColor = "border-yellow-200";
+  } else if (score >= 40) {
+    bgColor = "bg-orange-100";
+    textColor = "text-orange-800";
+    borderColor = "border-orange-200";
+  }
+
+  return (
+    <div className={`rounded-lg border ${borderColor} ${bgColor} p-3`}>
+      <div className="flex items-center justify-between mb-2">
+        <span className={`text-2xl font-bold ${textColor}`}>
+          {score.toFixed(0)}%
+        </span>
+        <span className={`text-xs ${textColor} opacity-70 font-medium`}>
+          {isRelevant ? "✓ Relevant" : "✗ Not Relevant"}
+        </span>
+      </div>
+
+      <p className="font-semibold text-black mb-2">
+        {grade.recommendation}
+      </p>
+
+      <div className="flex items-center gap-3 text-xs text-black/60 mb-2">
+        <span>Relevance: {grade.relevance_format_score.toFixed(1)}/10</span>
+        <span>•</span>
+        <span>Serendipity: {grade.serendipity_score.toFixed(1)}/10</span>
+        <span>•</span>
+        <span>Match: {(grade.fuzzy_query_to_rec * 100).toFixed(0)}%</span>
+      </div>
+
+      {/* Reasoning sections */}
+      {(grade.relevance_format_reasoning || grade.serendipity_reasoning || grade.overall_reasoning) && (
+        <div className="mt-2">
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-xs text-black/60 hover:text-black/80 font-medium flex items-center gap-1"
+          >
+            {isExpanded ? "▼" : "▶"} View Reasoning
+          </button>
+
+          {isExpanded && (
+            <div className="mt-2 space-y-2">
+              {grade.relevance_format_reasoning && (
+                <div className="rounded border border-black/10 bg-white p-2">
+                  <p className="text-xs font-semibold text-black/70 mb-1">Relevance Reasoning:</p>
+                  <p className="text-xs text-black/70 leading-relaxed">
+                    {grade.relevance_format_reasoning}
+                  </p>
+                </div>
+              )}
+
+              {grade.serendipity_reasoning && (
+                <div className="rounded border border-black/10 bg-white p-2">
+                  <p className="text-xs font-semibold text-black/70 mb-1">Serendipity Reasoning:</p>
+                  <p className="text-xs text-black/70 leading-relaxed">
+                    {grade.serendipity_reasoning}
+                  </p>
+                </div>
+              )}
+
+              {grade.overall_reasoning && (
+                <div className="rounded border border-black/10 bg-white p-2">
+                  <p className="text-xs font-semibold text-black/70 mb-1">Overall Reasoning:</p>
+                  <p className="text-xs text-black/70 leading-relaxed">
+                    {grade.overall_reasoning}
+                  </p>
+                </div>
+              )}
+
+              {/* Relevance checks breakdown */}
+              {Object.keys(grade.relevance_checks || {}).length > 0 && (
+                <div className="rounded border border-black/10 bg-white p-2">
+                  <p className="text-xs font-semibold text-black/70 mb-1">Relevance Checks:</p>
+                  <div className="space-y-1">
+                    {Object.entries(grade.relevance_checks).map(([key, check]) => (
+                      <div key={key} className="text-xs">
+                        <span className={check.passed ? "text-green-700" : "text-red-700"}>
+                          {check.passed ? "✓" : "✗"}
+                        </span>
+                        <span className="ml-1 text-black/70">{key.replace(/_/g, " ")}</span>
+                        {check.points !== undefined && (
+                          <span className="ml-1 text-black/50">({check.points} pts)</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Serendipity checks breakdown */}
+              {Object.keys(grade.serendipity_checks || {}).length > 0 && (
+                <div className="rounded border border-black/10 bg-white p-2">
+                  <p className="text-xs font-semibold text-black/70 mb-1">Serendipity Checks:</p>
+                  <div className="space-y-1">
+                    {Object.entries(grade.serendipity_checks).map(([key, check]) => (
+                      <div key={key} className="text-xs">
+                        <span className="text-black/70">{key.replace(/_/g, " ")}</span>
+                        {check.tier !== undefined && (
+                          <span className="ml-1 text-black/50">(Tier {check.tier})</span>
+                        )}
+                        {check.points !== undefined && (
+                          <span className="ml-1 text-black/50">({check.points} pts)</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const FuzzyGradingDetailPanel = ({ grade }: { grade: FuzzyGradingResult }) => {
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const score = grade.weighted_score_pct;
+  const isRelevant = grade.label === "relevant";
+
+  // Score color for overall display
+  let scoreColor = "text-red-600";
+  if (score >= 80) scoreColor = "text-green-600";
+  else if (score >= 60) scoreColor = "text-yellow-600";
+  else if (score >= 40) scoreColor = "text-orange-600";
+
+  return (
+    <div className="space-y-4">
+      {/* Overall Score */}
+      <div className="rounded-lg border border-black/10 bg-gradient-to-br from-black/[0.02] to-black/[0.05] p-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-black/50">Overall Score</h3>
+            <p className={`text-4xl font-bold ${scoreColor} mt-1`}>{score.toFixed(1)}%</p>
+            <p className="text-sm text-black/60 mt-1">
+              Weighted: {grade.weighted_score.toFixed(2)}/10
+            </p>
+          </div>
+          <div className={`rounded-full px-6 py-3 ${isRelevant ? "bg-green-100" : "bg-red-100"}`}>
+            <span className={`text-lg font-bold ${isRelevant ? "text-green-800" : "text-red-800"}`}>
+              {isRelevant ? "RELEVANT" : "NOT RELEVANT"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Query and Recommendation */}
+      <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-black/50 mb-2">Query & Recommendation</h3>
+        <div className="space-y-2">
+          <div>
+            <span className="text-xs text-black/50">Query:</span>
+            <p className="text-sm font-medium text-black">{grade.query}</p>
+          </div>
+          <div>
+            <span className="text-xs text-black/50">Recommendation:</span>
+            <p className="text-sm font-medium text-black">{grade.recommendation}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Fuzzy Matching Scores */}
+      <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-black/50 mb-2">Fuzzy Matching</h3>
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <span className="text-black/50">Query→Rec:</span>
+            <span className="ml-2 font-semibold text-black">
+              {(grade.fuzzy_query_to_rec * 100).toFixed(0)}%
+            </span>
+          </div>
+          <div>
+            <span className="text-black/50">Passed:</span>
+            <span className="ml-2 font-semibold text-black">
+              {grade.fuzzy_passed ? "✓ Yes" : "✗ No"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Scores Breakdown */}
+      <div className="rounded-lg border border-black/10 bg-white p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-black/50 mb-3">Score Breakdown</h3>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-black">Relevance & Format</span>
+            <span className="font-bold text-black">{grade.relevance_format_score.toFixed(2)}/10</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-black">Serendipity</span>
+            <span className="font-bold text-black">{grade.serendipity_score.toFixed(2)}/10</span>
+          </div>
+          <div className="border-t border-black/10 pt-2 flex items-center justify-between">
+            <span className="text-sm font-semibold text-black">Weighted (70/30)</span>
+            <span className="font-bold text-black">{grade.weighted_score.toFixed(2)}/10</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Reasoning */}
+      <div className="space-y-2">
+        <button
+          onClick={() => setExpandedSection(expandedSection === "relevance" ? null : "relevance")}
+          className="w-full rounded-lg border border-black/10 bg-black/[0.02] p-3 text-left hover:bg-black/[0.04] transition"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-black">Relevance Reasoning</span>
+            <span className="text-xs text-black/40">{expandedSection === "relevance" ? "▼" : "▶"}</span>
+          </div>
+        </button>
+        {expandedSection === "relevance" && (
+          <div className="rounded-lg border border-black/10 bg-white p-3">
+            <p className="text-sm text-black/80 leading-relaxed">{grade.relevance_format_reasoning}</p>
+          </div>
+        )}
+
+        <button
+          onClick={() => setExpandedSection(expandedSection === "serendipity" ? null : "serendipity")}
+          className="w-full rounded-lg border border-black/10 bg-black/[0.02] p-3 text-left hover:bg-black/[0.04] transition"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-black">Serendipity Reasoning</span>
+            <span className="text-xs text-black/40">{expandedSection === "serendipity" ? "▼" : "▶"}</span>
+          </div>
+        </button>
+        {expandedSection === "serendipity" && (
+          <div className="rounded-lg border border-black/10 bg-white p-3">
+            <p className="text-sm text-black/80 leading-relaxed">{grade.serendipity_reasoning}</p>
+          </div>
+        )}
+
+        <button
+          onClick={() => setExpandedSection(expandedSection === "overall" ? null : "overall")}
+          className="w-full rounded-lg border border-black/10 bg-black/[0.02] p-3 text-left hover:bg-black/[0.04] transition"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-black">Overall Reasoning</span>
+            <span className="text-xs text-black/40">{expandedSection === "overall" ? "▼" : "▶"}</span>
+          </div>
+        </button>
+        {expandedSection === "overall" && (
+          <div className="rounded-lg border border-black/10 bg-white p-3">
+            <p className="text-sm text-black/80 leading-relaxed">{grade.overall_reasoning}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Metadata */}
+      <div className="rounded-lg border border-black/10 bg-black/[0.02] p-3">
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          <div>
+            <span className="text-black/50">Model:</span>
+            <span className="ml-2 font-mono text-black">{grade.judge_model}</span>
+          </div>
+          <div>
+            <span className="text-black/50">Time:</span>
+            <span className="ml-2 font-mono text-black">{grade.elapsed_ms.toFixed(0)}ms</span>
+          </div>
+          <div className="col-span-2">
+            <span className="text-black/50">Rewrite ID:</span>
+            <span className="ml-2 font-mono text-black text-[10px]">{grade.rewrite_id}</span>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -715,6 +1003,9 @@ const TraceDashboard = () => {
   const [loadingProgress, setLoadingProgress] = useState<{ loaded: number; total: number } | null>(null);
   const [gradingData, setGradingData] = useState<GradingData | null>(null);
   const [gradingLookup, setGradingLookup] = useState<Map<string, GradingResult>>(new Map());
+  const [fuzzyGradingData, setFuzzyGradingData] = useState<FuzzyGradingData | null>(null);
+  const [fuzzyGradingLookup, setFuzzyGradingLookup] = useState<Map<string, FuzzyGradingResult[]>>(new Map());
+  const [gradingMode, setGradingMode] = useState<"structured" | "fuzzy">("structured");
 
   const parseCsv = useCallback(
     (text: string, label: string) => {
@@ -805,6 +1096,39 @@ const TraceDashboard = () => {
       console.log(`Loaded ${data.results.length} grading results`);
     } catch (error) {
       console.warn("Failed to load grading data:", error);
+    }
+  }, []);
+
+  const loadFuzzyGradingData = useCallback(async () => {
+    try {
+      const response = await fetch("/VOX_Metis_100_fuzzy_grades.json");
+      if (!response.ok) {
+        console.warn("Fuzzy grading data not found, continuing without fuzzy grades");
+        return;
+      }
+      const data: FuzzyGradingData = await response.json();
+      setFuzzyGradingData(data);
+
+      // Build lookup map for fuzzy grades
+      // Key format: `${conversation_id}|${trace_index}|${carousel_index}`
+      // Value is an array of FuzzyGradingResult (one per recommendation)
+      const lookup = new Map<string, FuzzyGradingResult[]>();
+      for (const result of data.results) {
+        const key = `${result.conversation_id}|${result.trace_index}|${result.carousel_index}`;
+        const existing = lookup.get(key) || [];
+        existing.push(result);
+        lookup.set(key, existing);
+      }
+      setFuzzyGradingLookup(lookup);
+      console.log(`Loaded ${data.results.length} fuzzy grading results`);
+      console.log('Fuzzy grading keys:', Array.from(lookup.keys()));
+      console.log('Sample fuzzy grades:', data.results.slice(0, 3).map(r => ({
+        key: `${r.conversation_id}|${r.trace_index}|${r.carousel_index}`,
+        query: r.query,
+        recommendation: r.recommendation
+      })));
+    } catch (error) {
+      console.warn("Failed to load fuzzy grading data:", error);
     }
   }, []);
 
@@ -920,7 +1244,8 @@ const TraceDashboard = () => {
   useEffect(() => {
     loadDemo();
     loadGradingData();
-  }, [loadDemo, loadGradingData]);
+    loadFuzzyGradingData();
+  }, [loadDemo, loadGradingData, loadFuzzyGradingData]);
 
   const selectedRecord = records.find(
     (record) => record.conversationId === selectedId,
@@ -1151,6 +1476,33 @@ const TraceDashboard = () => {
           <p className="mt-0.5 font-semibold text-black">{sourceLabel}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          {/* Grading Mode Toggle */}
+          {(gradingData || fuzzyGradingData) && (
+            <div className="flex items-center gap-1 rounded-lg border border-black/10 bg-white p-1">
+              <button
+                onClick={() => setGradingMode("structured")}
+                className={cn(
+                  "rounded-md px-3 py-1.5 text-xs font-medium transition",
+                  gradingMode === "structured"
+                    ? "bg-black text-white"
+                    : "text-black hover:bg-black/5"
+                )}
+              >
+                Structured
+              </button>
+              <button
+                onClick={() => setGradingMode("fuzzy")}
+                className={cn(
+                  "rounded-md px-3 py-1.5 text-xs font-medium transition",
+                  gradingMode === "fuzzy"
+                    ? "bg-black text-white"
+                    : "text-black hover:bg-black/5"
+                )}
+              >
+                Fuzzy
+              </button>
+            </div>
+          )}
           <input
             id="trace-upload"
             type="file"
@@ -1491,19 +1843,57 @@ const TraceDashboard = () => {
                                 </div>
                                 {trace.rewritten_queries && trace.rewritten_queries.length > 0 && (
                                   <div className="border-t border-black/10 pt-2">
-                                    <p className="text-xs font-medium uppercase tracking-wider text-black/50">
-                                      Rewrites
-                                    </p>
-                                    <div className="mt-1 flex flex-wrap gap-2">
-                                      {trace.rewritten_queries.map((rewrite, rwIdx) => (
-                                        <span
-                                          key={`rw-${traceIdx}-${rwIdx}`}
-                                          className="rounded-md border border-black/10 bg-white px-3 py-1 text-sm text-black"
-                                        >
-                                          {rewrite.rewritten_query}
+                                    <div className="flex items-center justify-between mb-2">
+                                      <p className="text-xs font-medium uppercase tracking-wider text-black/50">
+                                        Rewrites
+                                      </p>
+                                      {gradingMode === "fuzzy" && (
+                                        <span className="text-xs text-black/40">
+                                          Fuzzy Grading (Query→Rewrite)
                                         </span>
-                                      ))}
+                                      )}
                                     </div>
+                                    {gradingMode === "fuzzy" ? (
+                                      <div className="space-y-2">
+                                        {trace.rewritten_queries.map((rewrite, rwIdx) => {
+                                          // Get fuzzy grade for this rewrite
+                                          // rwIdx directly maps to carousel_index
+                                          const carouselIdx = rwIdx;
+                                          const fuzzyKey = `${enrichedRecord.conversationId}|${traceIdx}|${carouselIdx}`;
+                                          const fuzzyGrades = fuzzyGradingLookup.get(fuzzyKey) || [];
+                                          // Find grade matching this rewrite text
+                                          const fuzzyGrade = fuzzyGrades.find(g =>
+                                            g.recommendation.toLowerCase().trim() === rewrite.rewritten_query.toLowerCase().trim()
+                                          );
+
+                                          return (
+                                            <div key={`rw-${traceIdx}-${rwIdx}`}>
+                                              {fuzzyGrade ? (
+                                                <FuzzyGradeCard grade={fuzzyGrade} />
+                                              ) : (
+                                                <div className="rounded-md border border-yellow-200 bg-yellow-50 px-3 py-2">
+                                                  <p className="text-sm text-black">{rewrite.rewritten_query}</p>
+                                                  <p className="text-xs text-yellow-700 mt-1">
+                                                    Skipped (fuzzy threshold &lt; 0.7)
+                                                  </p>
+                                                </div>
+                                              )}
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    ) : (
+                                      <div className="mt-1 flex flex-wrap gap-2">
+                                        {trace.rewritten_queries.map((rewrite, rwIdx) => (
+                                          <span
+                                            key={`rw-${traceIdx}-${rwIdx}`}
+                                            className="rounded-md border border-black/10 bg-white px-3 py-1 text-sm text-black"
+                                          >
+                                            {rewrite.rewritten_query}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    )}
                                   </div>
                                 )}
                               </div>
@@ -1511,7 +1901,7 @@ const TraceDashboard = () => {
                           </div>
 
                           {/* Store Recommendations */}
-                          {trace.store_recommendations && trace.store_recommendations.length > 0 && (
+                          {gradingMode !== "fuzzy" && trace.store_recommendations && trace.store_recommendations.length > 0 && (
                             <div className="mt-4 space-y-4">
                               {trace.store_recommendations
                                 .sort((a, b) => (a.carousel_index ?? 0) - (b.carousel_index ?? 0))
@@ -1565,24 +1955,62 @@ const TraceDashboard = () => {
                         {activeTrace.rewritten_queries &&
                           activeTrace.rewritten_queries.length > 0 && (
                             <div className="mt-3 border-t border-black/10 pt-3">
-                              <p className="text-xs font-medium uppercase tracking-wider text-black/50">
-                                Rewrites
-                              </p>
-                              <div className="mt-2 flex flex-wrap gap-2">
-                                {activeTrace.rewritten_queries.map((rewrite, idx) => (
-                                  <span
-                                    key={`rewrite-${idx}`}
-                                    className="rounded-md border border-black/10 bg-white px-3 py-1 text-sm text-black"
-                                  >
-                                    {rewrite.rewritten_query}
+                              <div className="flex items-center justify-between mb-2">
+                                <p className="text-xs font-medium uppercase tracking-wider text-black/50">
+                                  Rewrites
+                                </p>
+                                {gradingMode === "fuzzy" && (
+                                  <span className="text-xs text-black/40">
+                                    Fuzzy Grading (Query→Rewrite)
                                   </span>
-                                ))}
+                                )}
                               </div>
+                              {gradingMode === "fuzzy" ? (
+                                <div className="space-y-2">
+                                  {activeTrace.rewritten_queries.map((rewrite, rwIdx) => {
+                                    // Get fuzzy grade for this rewrite
+                                    // rwIdx directly maps to carousel_index
+                                    const carouselIdx = rwIdx;
+                                    const fuzzyKey = `${enrichedRecord.conversationId}|${activeTraceIndex}|${carouselIdx}`;
+                                    const fuzzyGrades = fuzzyGradingLookup.get(fuzzyKey) || [];
+                                    // Find grade matching this rewrite text
+                                    const fuzzyGrade = fuzzyGrades.find(g =>
+                                      g.recommendation.toLowerCase().trim() === rewrite.rewritten_query.toLowerCase().trim()
+                                    );
+
+                                    return (
+                                      <div key={`rewrite-${rwIdx}`}>
+                                        {fuzzyGrade ? (
+                                          <FuzzyGradeCard grade={fuzzyGrade} />
+                                        ) : (
+                                          <div className="rounded-md border border-yellow-200 bg-yellow-50 px-3 py-2">
+                                            <p className="text-sm text-black">{rewrite.rewritten_query}</p>
+                                            <p className="text-xs text-yellow-700 mt-1">
+                                              Skipped (fuzzy threshold &lt; 0.7)
+                                            </p>
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              ) : (
+                                <div className="mt-2 flex flex-wrap gap-2">
+                                  {activeTrace.rewritten_queries.map((rewrite, idx) => (
+                                    <span
+                                      key={`rewrite-${idx}`}
+                                      className="rounded-md border border-black/10 bg-white px-3 py-1 text-sm text-black"
+                                    >
+                                      {rewrite.rewritten_query}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           )}
                       </div>
 
-                      {activeTrace.store_recommendations && activeTrace.store_recommendations.length > 0 && (
+                      {gradingMode !== "fuzzy" && activeTrace.store_recommendations && activeTrace.store_recommendations.length > 0 && (
                         <div className="space-y-4">
                           {activeTrace.store_recommendations
                             .sort((a, b) => (a.carousel_index ?? 0) - (b.carousel_index ?? 0))

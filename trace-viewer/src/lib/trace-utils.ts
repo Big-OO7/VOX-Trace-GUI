@@ -73,6 +73,65 @@ export interface GradingData {
   results: GradingResult[];
 }
 
+// Fuzzy Grading Interfaces
+export interface FuzzyGradingCheck {
+  passed?: boolean;
+  points?: number;
+  reason?: string;
+  tier?: number;
+  is_gate_violation?: boolean;
+}
+
+export interface FuzzyGradingResult {
+  conversation_id: string;
+  consumer_id: string;
+  trace_index: number;
+  rewrite_id: string;
+  carousel_index: number;
+  query: string;
+  recommendation: string;
+  normalized_query: string;
+  normalized_recommendation: string;
+
+  // Fuzzy matching scores
+  fuzzy_query_to_rec: number;
+  fuzzy_rec_to_top_item: number;
+  fuzzy_max_item_similarity: number;
+  fuzzy_passed: boolean;
+
+  // LLM judge scores
+  relevance_format_score: number;
+  serendipity_score: number;
+  weighted_score: number;
+  weighted_score_pct: number;
+
+  // Detailed checks
+  relevance_checks: Record<string, FuzzyGradingCheck>;
+  serendipity_checks: Record<string, FuzzyGradingCheck>;
+
+  // Reasoning
+  relevance_format_reasoning: string;
+  serendipity_reasoning: string;
+  overall_reasoning: string;
+
+  // Label and metadata
+  label: "relevant" | "not_relevant";
+  judge_model: string;
+  elapsed_ms: number;
+  status: string;
+  error: string | null;
+}
+
+export interface FuzzyGradingData {
+  metadata: {
+    total_tasks: number;
+    timestamp: string;
+    grading_type: string;
+    score_mapping: Record<string, number>;
+  };
+  results: FuzzyGradingResult[];
+}
+
 export interface TraceStore {
   store_name?: string;
   business_id?: string;
