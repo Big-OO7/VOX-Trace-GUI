@@ -1,15 +1,47 @@
-# Large CSV files
-VOX__Metis_100_FullTraces.csv
-*.csv
-
-# Large JSON files (root level only, keep trace-viewer/public/data version)
-/fuzzy_query_eval_results.json
-/traces.json
-
-# OS files
-.DS_Store
-
 # Python
 __pycache__/
-*.pyc
-.env
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Evaluation outputs
+*.log
+*_eval_results.json
+test_*.json
+*_BACKUP.py
+temp_*.txt
+evaluation_run.log
+
+# Results directory (keep structure, ignore large result files)
+results/*.json
+
+# Data files
+*.csv
+traces.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# Documentation drafts
+*_SUMMARY.md
+*_COMPLETED.md

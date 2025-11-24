@@ -2,15 +2,10 @@
 
 import { useState, useEffect } from "react";
 import TraceDashboard from "@/components/trace-dashboard";
-import EvalResultsViewer from "@/components/eval-results-viewer";
 import Login from "@/components/login";
-import { BarChart3, Database, LogOut } from "lucide-react";
-
-const cn = (...classes: Array<string | undefined | null | false>) =>
-  classes.filter(Boolean).join(" ");
+import { LogOut } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"traces" | "results">("traces");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -65,43 +60,9 @@ export default function Home() {
               Logout
             </button>
           </div>
-
-          {/* Tab Navigation */}
-          <div className="mt-8 flex gap-2">
-            <button
-              onClick={() => setActiveTab("traces")}
-              className={cn(
-                "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition",
-                activeTab === "traces"
-                  ? "bg-black text-white"
-                  : "border border-black/10 bg-white text-black hover:bg-black/5"
-              )}
-            >
-              <Database className="h-4 w-4" />
-              Trace Explorer
-            </button>
-            <button
-              onClick={() => setActiveTab("results")}
-              className={cn(
-                "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition",
-                activeTab === "results"
-                  ? "bg-black text-white"
-                  : "border border-black/10 bg-white text-black hover:bg-black/5"
-              )}
-            >
-              <BarChart3 className="h-4 w-4" />
-              Evaluation Results
-            </button>
-          </div>
         </header>
 
-        {/* Keep both components mounted but hide inactive one to preserve state */}
-        <div className={activeTab === "traces" ? "block" : "hidden"}>
-          <TraceDashboard />
-        </div>
-        <div className={activeTab === "results" ? "block" : "hidden"}>
-          <EvalResultsViewer />
-        </div>
+        <TraceDashboard />
       </main>
     </div>
   );

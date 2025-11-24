@@ -205,27 +205,48 @@ const StoreDetailModal = ({
   onClose: () => void;
 }) => {
   const allMenuItems = store.menu_items ?? [];
+  const storeAny = store as any;
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       onClick={onClose}
     >
       <div
-        className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-white shadow-xl"
+        className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg bg-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-black/10 bg-white p-6">
-          <div>
-            <h2 className="text-2xl font-bold text-black">
-              {store.store_name ?? "Unnamed Store"}
-            </h2>
-            {store.cuisine && (
-              <p className="mt-1 text-black/60">{store.cuisine}</p>
-            )}
+          <div className="flex-1">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-bold text-black">
+                  {store.store_name ?? "Unnamed Store"}
+                </h2>
+                {store.cuisine && (
+                  <p className="mt-1 text-black/60">{store.cuisine}</p>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                {storeAny.star_rating && (
+                  <div className="flex items-center gap-1 rounded-full bg-black px-3 py-1.5">
+                    <span className="text-sm font-bold text-white">★</span>
+                    <span className="text-sm font-semibold text-white">{storeAny.star_rating}</span>
+                  </div>
+                )}
+                {storeAny.price_range && (
+                  <div className="rounded-full bg-black/10 px-3 py-1.5">
+                    <span className="text-sm font-semibold text-black">
+                      {'$'.repeat(storeAny.price_range)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-2 transition hover:bg-black/5"
+            className="ml-4 rounded-lg p-2 transition hover:bg-black/5"
             aria-label="Close"
           >
             <svg
@@ -245,34 +266,54 @@ const StoreDetailModal = ({
         </div>
 
         <div className="p-6 space-y-6">
+          {/* Store Summary */}
+          {storeAny.summary && (
+            <div className="rounded-lg border border-black/10 bg-gradient-to-br from-black/[0.02] to-black/[0.05] p-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-black/50 mb-2">Store Summary</h3>
+              <p className="text-sm text-black/80 leading-relaxed">{storeAny.summary}</p>
+            </div>
+          )}
+
           {/* Store Details Grid */}
-          <div className="grid grid-cols-2 gap-4 rounded-lg border border-black/10 bg-black/[0.02] p-4">
-            <div>
-              <dt className="text-sm font-medium text-black/50">Business ID</dt>
-              <dd className="mt-1 text-black">{store.business_id ?? "—"}</dd>
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
+              <dt className="text-xs font-medium uppercase tracking-wider text-black/50">Business ID</dt>
+              <dd className="mt-1 text-base font-semibold text-black">{store.business_id ?? "—"}</dd>
             </div>
-            <div>
-              <dt className="text-sm font-medium text-black/50">ETA</dt>
-              <dd className="mt-1 text-black">{store.eta_minutes ?? "—"} min</dd>
+            {storeAny.store_id && (
+              <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
+                <dt className="text-xs font-medium uppercase tracking-wider text-black/50">Store ID</dt>
+                <dd className="mt-1 text-base font-semibold text-black">{storeAny.store_id}</dd>
+              </div>
+            )}
+            <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
+              <dt className="text-xs font-medium uppercase tracking-wider text-black/50">ETA</dt>
+              <dd className="mt-1 text-base font-semibold text-black">{store.eta_minutes ?? "—"}</dd>
             </div>
-            <div>
-              <dt className="text-sm font-medium text-black/50">Distance</dt>
-              <dd className="mt-1 text-black">
+            <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
+              <dt className="text-xs font-medium uppercase tracking-wider text-black/50">Distance</dt>
+              <dd className="mt-1 text-base font-semibold text-black">
                 {store.distance_miles
                   ? `${Number(store.distance_miles).toFixed(2)} mi`
                   : "—"}
               </dd>
             </div>
-            <div>
-              <dt className="text-sm font-medium text-black/50">Dietary Options</dt>
-              <dd className="mt-1 text-black">
+            {storeAny.positions?.vertical_card_position !== undefined && (
+              <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
+                <dt className="text-xs font-medium uppercase tracking-wider text-black/50">Card Position</dt>
+                <dd className="mt-1 text-base font-semibold text-black">{storeAny.positions.vertical_card_position}</dd>
+              </div>
+            )}
+            <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4 col-span-2 lg:col-span-3">
+              <dt className="text-xs font-medium uppercase tracking-wider text-black/50">Dietary Options</dt>
+              <dd className="mt-1 text-sm text-black">
                 {store.dietary_options ?? "Standard"}
               </dd>
             </div>
             {store.address && (
-              <div className="col-span-2">
-                <dt className="text-sm font-medium text-black/50">Address</dt>
-                <dd className="mt-1 text-black">{store.address}</dd>
+              <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4 col-span-2 lg:col-span-3">
+                <dt className="text-xs font-medium uppercase tracking-wider text-black/50">Address</dt>
+                <dd className="mt-1 text-sm text-black">{store.address}</dd>
               </div>
             )}
           </div>
@@ -283,32 +324,76 @@ const StoreDetailModal = ({
               <h3 className="text-lg font-semibold text-black mb-3">
                 Full Menu ({allMenuItems.length} items)
               </h3>
-              <div className="rounded-lg border border-black/10 bg-black/[0.02] p-4">
-                <ul className="grid gap-2 sm:grid-cols-2">
-                  {allMenuItems.map((item, idx) => (
-                    <li
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {allMenuItems.map((item, idx) => {
+                  const itemAny = item as any;
+                  let itemProfile = null;
+                  let itemWebsterTags = null;
+
+                  try {
+                    if (itemAny.profile && typeof itemAny.profile === 'string') {
+                      itemProfile = JSON.parse(itemAny.profile);
+                    }
+                  } catch (e) {}
+
+                  try {
+                    if (itemAny.item_webster_tags && typeof itemAny.item_webster_tags === 'string') {
+                      itemWebsterTags = JSON.parse(itemAny.item_webster_tags);
+                    }
+                  } catch (e) {}
+
+                  const itemName = inferMenuItemName(item);
+                  const description = itemProfile?.identity?.description;
+                  const price = itemProfile?.identity?.price;
+                  const menuCategory = itemProfile?.identity?.menu_category;
+                  const dietaryCompliance = itemWebsterTags?.dietary_compliance;
+                  const flavor = itemWebsterTags?.flavor;
+
+                  return (
+                    <div
                       key={`${store.business_id}-menu-${idx}`}
-                      className="text-sm text-black/80"
+                      className="rounded-lg border border-black/10 bg-white p-4 hover:bg-black/[0.02] transition"
                     >
-                      • {inferMenuItemName(item)}
-                    </li>
-                  ))}
-                </ul>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-black">{itemName}</h4>
+                          {description && (
+                            <p className="mt-1 text-sm text-black/60">{description}</p>
+                          )}
+                          {menuCategory && (
+                            <p className="mt-1 text-xs text-black/40">{menuCategory}</p>
+                          )}
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {dietaryCompliance && Array.isArray(dietaryCompliance) && dietaryCompliance.length > 0 && (
+                              dietaryCompliance.map((diet: string, i: number) => (
+                                <span key={i} className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                                  {diet}
+                                </span>
+                              ))
+                            )}
+                            {flavor && Array.isArray(flavor) && flavor.length > 0 && (
+                              flavor.slice(0, 3).map((flav: string, i: number) => (
+                                <span key={i} className="rounded-full bg-black/5 px-2 py-0.5 text-xs text-black/60">
+                                  {flav}
+                                </span>
+                              ))
+                            )}
+                          </div>
+                        </div>
+                        {price !== undefined && price !== null && (
+                          <div className="text-right">
+                            <span className="text-sm font-semibold text-black">
+                              ${typeof price === 'number' ? price.toFixed(2) : price}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
-
-          {/* Raw Store Data */}
-          <details className="rounded-lg border border-black/10">
-            <summary className="cursor-pointer p-4 font-medium text-black hover:bg-black/[0.02]">
-              View Raw Store Data
-            </summary>
-            <div className="border-t border-black/10 p-4">
-              <pre className="overflow-x-auto text-xs text-black/70">
-                {JSON.stringify(store, null, 2)}
-              </pre>
-            </div>
-          </details>
         </div>
       </div>
     </div>
@@ -1036,7 +1121,7 @@ const TraceDashboard = () => {
                                   <div key={`carousel-${traceIdx}-${carIdx}`} className="rounded-lg border border-black/5 bg-black/[0.01] p-4">
                                     <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-black">
                                       <span className="rounded bg-black/10 px-2 py-0.5">
-                                        Row {carousel.carousel_index ?? carIdx}
+                                        {(carousel as any).carousel_name || (carousel as any).title || `Carousel ${carousel.carousel_index ?? carIdx}`}
                                       </span>
                                       <span className="text-black/40">
                                         {carousel.stores?.length || 0} stores
@@ -1107,7 +1192,7 @@ const TraceDashboard = () => {
                               <div key={`carousel-${carIdx}`} className="rounded-lg border border-black/5 bg-black/[0.01] p-4">
                                 <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-black">
                                   <span className="rounded bg-black/10 px-2 py-0.5">
-                                    Row {carousel.carousel_index ?? carIdx}
+                                    {(carousel as any).carousel_name || (carousel as any).title || `Carousel ${carousel.carousel_index ?? carIdx}`}
                                   </span>
                                   <span className="text-black/40">
                                     {carousel.stores?.length || 0} stores
