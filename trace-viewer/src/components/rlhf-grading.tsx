@@ -403,7 +403,6 @@ function GradingInterface({
   canGoPrevious,
   canGoNext,
   isLastItem,
-  compactView,
   showRubric,
 }: {
   grade: ManualGrade;
