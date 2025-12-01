@@ -11,7 +11,7 @@ import {
   getGradesFromLocalStorage,
   exportGradesToCSV,
 } from '@/lib/grading-utils';
-import { ChevronLeft, ChevronRight, Check, SkipForward, Download, User, List, Sparkles, Eye, EyeOff, PlayCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, SkipForward, Download, User, List, Sparkles, PlayCircle } from 'lucide-react';
 import Toast from './toast';
 import DetailedRubric from './detailedrubric';
 
@@ -32,6 +32,7 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
   const [compactView, setCompactView] = useState(false);
   const [showRubric, setShowRubric] = useState(true);
+  const [gradesCache, setGradesCache] = useState<Map<number, ManualGrade>>(new Map());
 
   // Get unique consumer IDs
   const consumerIds = Array.from(new Set(datasetGrades.map(d => d.consumer_id.toString()))).sort();
@@ -44,6 +45,7 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
       setCurrentIndex(0);
       setGradingStarted(false);
       setCompletedGrades(new Set());
+      setGradesCache(new Map());
     } else {
       setBatchItems([]);
     }
@@ -52,6 +54,13 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
   // Load current item into grading form
   const loadCurrentItem = () => {
     if (batchItems.length === 0 || currentIndex >= batchItems.length) return;
+
+    // Check if we have a cached grade for this item
+    const cachedGrade = gradesCache.get(currentIndex);
+    if (cachedGrade) {
+      setCurrentGrade(cachedGrade);
+      return;
+    }
 
     const item = batchItems[currentIndex];
     const newGrade: ManualGrade = {
@@ -67,7 +76,7 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
         categoryDietaryMatch: false,
         situationalSuitability: false,
         explicitConstraintsMet: false,
-        profileCompliant: true,
+        profileCompliant: false,
         outputClarity: false,
         mainstreamAvailability: false,
         formatCorrectness: false,
@@ -76,7 +85,7 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
       serendipityChecks: {
         cuisineDishNovelty: 0,
         lowDiscoverability: false,
-        familiarIngredientsNewContext: true,
+        familiarIngredientsNewContext: false,
         contextFitWhileNovel: false,
         ahaMoment: false,
         createsCuriosity: false,
@@ -92,6 +101,7 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
     if (gradingStarted) {
       loadCurrentItem();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex, gradingStarted]);
 
   const handleStartGrading = () => {
@@ -134,6 +144,10 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
 
   const handleSkip = () => {
     if (currentIndex < batchItems.length - 1) {
+      // Save current state to cache before moving
+      if (currentGrade) {
+        setGradesCache(new Map(gradesCache.set(currentIndex, currentGrade)));
+      }
       setCurrentIndex(currentIndex + 1);
       // Quick skip feedback
       setToast({ message: 'Skipped', type: 'info' });
@@ -143,6 +157,10 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
+      // Save current state to cache before moving
+      if (currentGrade) {
+        setGradesCache(new Map(gradesCache.set(currentIndex, currentGrade)));
+      }
       setCurrentIndex(currentIndex - 1);
     }
   };
@@ -188,13 +206,15 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
       ) : (
         <div className="space-y-4">
           {/* Progress Bar */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-300 dark:border-gray-700 p-6 shadow-lg">
-            <div className="flex items-center justify-between mb-3">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <User className="text-blue-600 dark:text-blue-400" size={24} />
+                <div className="p-2 bg-black/5 dark:bg-white/5 rounded-lg">
+                  <User className="text-black dark:text-white" size={20} />
+                </div>
                 <div>
-                  <h3 className="text-lg font-semibold">Consumer {selectedConsumerId}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <h3 className="text-lg font-semibold text-black dark:text-white">Consumer {selectedConsumerId}</h3>
+                  <p className="text-sm text-black/60 dark:text-white/60">
                     Grading {currentIndex + 1} of {batchItems.length}
                   </p>
                 </div>
@@ -202,48 +222,41 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowRubric(!showRubric)}
-                  className="flex items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all"
+                  className="flex items-center gap-2 px-3 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-black/90 dark:hover:bg-white/90 transition-colors text-sm font-medium"
                   title="Toggle rubric"
                 >
                   {showRubric ? 'Hide' : 'Show'} Rubric
                 </button>
                 <button
-                  onClick={() => setCompactView(!compactView)}
-                  className="flex items-center gap-2 px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all"
-                  title="Toggle compact view"
-                >
-                  {compactView ? <Eye size={16} /> : <EyeOff size={16} />}
-                </button>
-                <button
                   onClick={handleExportBatch}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+                  className="flex items-center gap-2 px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-black/90 dark:hover:bg-white/90 transition-colors text-sm font-medium"
                 >
                   <Download size={16} /> Export
                 </button>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm text-black/80 dark:text-white/80">
                 <span className="font-medium">Progress: {completedGrades.size} / {batchItems.length} completed</span>
-                <span className="font-bold text-green-600 dark:text-green-400">{progress}%</span>
+                <span className="font-bold text-black dark:text-white">{progress}%</span>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
                 <div
-                  className="bg-gradient-to-r from-green-500 to-emerald-500 h-full transition-all duration-500 ease-out"
+                  className="bg-black dark:bg-white h-full transition-all duration-300 ease-out"
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <div className="flex gap-1 mt-2">
+              <div className="flex gap-1">
                 {batchItems.map((_, idx) => (
                   <div
                     key={idx}
-                    className={`flex-1 h-2 rounded ${
+                    className={`flex-1 h-1.5 rounded-full transition-all duration-200 ${
                       completedGrades.has(idx)
-                        ? 'bg-green-500'
+                        ? 'bg-black dark:bg-white'
                         : idx === currentIndex
-                        ? 'bg-blue-500 animate-pulse'
-                        : 'bg-gray-300 dark:bg-gray-600'
+                        ? 'bg-gray-400 dark:bg-gray-500'
+                        : 'bg-gray-200 dark:bg-gray-700'
                     }`}
                   />
                 ))}
@@ -290,7 +303,7 @@ function BatchSelector({
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+        <h2 className="text-3xl font-bold text-black mb-2">
           RLHF Grading Platform
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
@@ -301,14 +314,16 @@ function BatchSelector({
       <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl border border-gray-300 dark:border-gray-700 p-8 shadow-xl">
         <div className="space-y-6">
           <div>
-            <label className="block text-lg font-semibold mb-3 flex items-center gap-2">
-              <User className="text-blue-600 dark:text-blue-400" size={20} />
+            <label className="block text-base font-semibold mb-3 flex items-center gap-2 text-black dark:text-white">
+              <div className="p-1.5 bg-black/5 dark:bg-white/5 rounded">
+                <User size={18} />
+              </div>
               Step 1: Select Consumer
             </label>
             <select
               value={selectedConsumerId}
               onChange={(e) => onSelectConsumer(e.target.value)}
-              className="w-full border-2 border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer text-lg"
+              className="w-full border border-black/10 dark:border-gray-600 rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-black dark:text-white focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition-all cursor-pointer"
             >
               <option value="">Select a consumer ID...</option>
               {consumerIds.map(id => (
@@ -319,40 +334,42 @@ function BatchSelector({
 
           {selectedConsumerId && (
             <div className="animate-slideUp">
-              <label className="block text-lg font-semibold mb-3 flex items-center gap-2">
-                <List className="text-purple-600 dark:text-purple-400" size={20} />
+              <label className="block text-base font-semibold mb-3 flex items-center gap-2 text-black dark:text-white">
+                <div className="p-1.5 bg-black/5 dark:bg-white/5 rounded">
+                  <List size={18} />
+                </div>
                 Step 2: Review Batch
               </label>
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700 p-4">
-                <div className="flex items-center justify-between mb-4">
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 p-5">
+                <div className="grid grid-cols-3 gap-4 mb-4">
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Total Items</p>
-                    <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{batchItems.length}</p>
+                    <p className="text-xs text-black/60 dark:text-white/60 mb-1">Total Items</p>
+                    <p className="text-2xl font-bold text-black dark:text-white">{batchItems.length}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Already Graded</p>
-                    <p className="text-3xl font-bold text-green-600 dark:text-green-400">{completedCount}</p>
+                    <p className="text-xs text-black/60 dark:text-white/60 mb-1">Already Graded</p>
+                    <p className="text-2xl font-bold text-black dark:text-white">{completedCount}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Remaining</p>
-                    <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">{batchItems.length - completedCount}</p>
+                    <p className="text-xs text-black/60 dark:text-white/60 mb-1">Remaining</p>
+                    <p className="text-2xl font-bold text-black dark:text-white">{batchItems.length - completedCount}</p>
                   </div>
                 </div>
 
-                <div className="max-h-64 overflow-y-auto space-y-2">
+                <div className="max-h-64 overflow-y-auto space-y-1.5">
                   {batchItems.map((item, idx) => (
                     <div
                       key={idx}
-                      className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded border border-gray-200 dark:border-gray-600"
+                      className="p-3 bg-black/[0.02] dark:bg-white/[0.02] hover:bg-black/[0.04] dark:hover:bg-white/[0.04] rounded-lg border border-black/5 dark:border-white/5 transition-colors"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <div className="font-semibold text-sm truncate">{item.recommendation}</div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                          <div className="font-medium text-sm text-black dark:text-white truncate">{item.recommendation}</div>
+                          <div className="text-xs text-black/60 dark:text-white/60 truncate mt-0.5">
                             "{item.query}" • {item.daypart}
                           </div>
                         </div>
-                        <div className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                        <div className="text-xs font-medium text-black/40 dark:text-white/40">
                           #{idx + 1}
                         </div>
                       </div>
@@ -363,9 +380,9 @@ function BatchSelector({
 
               <button
                 onClick={onStartGrading}
-                className="w-full mt-6 flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] text-lg font-semibold"
+                className="w-full mt-6 flex items-center justify-center gap-3 px-8 py-4 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-black/90 dark:hover:bg-white/90 transition-colors text-base font-semibold"
               >
-                <PlayCircle size={24} />
+                <PlayCircle size={20} />
                 Start Grading Batch
               </button>
             </div>
@@ -427,7 +444,7 @@ function GradingInterface({
     };
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [canGoPrevious, canGoNext]);
+  }, [canGoPrevious, canGoNext, onPrevious, onSkip, onSaveAndNext]);
 
   const relevanceScore = calculateRelevanceScore(grade.relevanceChecks);
   const serendipityScore = calculateSerendipityScore(grade.serendipityChecks);
@@ -437,18 +454,18 @@ function GradingInterface({
     <div className={`grid grid-cols-1 ${showRubric ? 'xl:grid-cols-5' : 'lg:grid-cols-3'} gap-6`}>
       <div className={`${showRubric ? 'xl:col-span-2' : 'lg:col-span-2'} space-y-4`}>
         {/* Item Info */}
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/10 dark:to-purple-900/10 rounded-lg border border-blue-200 dark:border-blue-800 p-4">
-          <div className="space-y-2">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 p-5">
+          <div className="space-y-3">
             <div>
-              <span className="text-sm text-gray-600 dark:text-gray-400">Query:</span>
-              <p className="font-semibold text-lg">{grade.query}</p>
+              <span className="text-xs font-medium text-black/60 dark:text-white/60 uppercase tracking-wide">Query</span>
+              <p className="font-semibold text-base text-black dark:text-white mt-1">{grade.query}</p>
             </div>
             <div>
-              <span className="text-sm text-gray-600 dark:text-gray-400">Recommendation:</span>
-              <p className="font-bold text-xl text-blue-600 dark:text-blue-400">{grade.recommendation}</p>
+              <span className="text-xs font-medium text-black/60 dark:text-white/60 uppercase tracking-wide">Recommendation</span>
+              <p className="font-bold text-lg text-black dark:text-white mt-1">{grade.recommendation}</p>
             </div>
-            <div className="flex gap-4 text-sm">
-              <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded">
+            <div>
+              <span className="inline-flex px-2.5 py-1 bg-black/5 dark:bg-white/5 text-black dark:text-white rounded text-sm font-medium">
                 {grade.daypart}
               </span>
             </div>
@@ -456,8 +473,8 @@ function GradingInterface({
         </div>
 
         {/* Relevance Checks */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-300 dark:border-gray-700 p-4 shadow-lg">
-          <h4 className="font-semibold text-lg text-blue-600 dark:text-blue-400 mb-3">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 p-5">
+          <h4 className="font-semibold text-base text-black dark:text-white mb-3">
             Relevance & Format (70%)
           </h4>
           <div className={`space-y-${compactView ? '1' : '2'}`}>
@@ -475,16 +492,16 @@ function GradingInterface({
         </div>
 
         {/* Serendipity Checks */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-300 dark:border-gray-700 p-4 shadow-lg">
-          <h4 className="font-semibold text-lg text-purple-600 dark:text-purple-400 mb-3">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 p-5">
+          <h4 className="font-semibold text-base text-black dark:text-white mb-3">
             Serendipity (30%)
           </h4>
           <div className="space-y-2 mb-3">
-            <label className="block text-sm font-medium">Cuisine & Dish Novelty (0-5 points)</label>
+            <label className="block text-sm font-medium text-black dark:text-white">Cuisine & Dish Novelty (0-5 points)</label>
             <select
               value={grade.serendipityChecks.cuisineDishNovelty}
               onChange={(e) => updateSerendipityCheck('cuisineDishNovelty', Number(e.target.value) as 0 | 1 | 2 | 3 | 4 | 5)}
-              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-purple-500 cursor-pointer"
+              className="w-full border border-black/10 dark:border-gray-600 rounded-lg px-3 py-2.5 bg-white dark:bg-gray-700 text-black dark:text-white focus:ring-2 focus:ring-black dark:focus:ring-white cursor-pointer transition-all"
             >
               {NOVELTY_TIERS.map((tier) => (
                 <option key={tier.value} value={tier.value}>{tier.label}</option>
@@ -501,58 +518,58 @@ function GradingInterface({
         </div>
 
         {/* Navigation */}
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <button
             onClick={onPrevious}
             disabled={!canGoPrevious}
-            className="flex items-center gap-2 px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex-1"
+            className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-1 font-medium text-sm"
           >
-            <ChevronLeft size={20} /> Previous
+            <ChevronLeft size={18} /> Previous
           </button>
           <button
             onClick={onSkip}
             disabled={!canGoNext}
-            className="flex items-center gap-2 px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex-1"
+            className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-1 font-medium text-sm"
           >
-            Skip <SkipForward size={20} />
+            Skip <SkipForward size={18} />
           </button>
           <button
             onClick={onSaveAndNext}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all flex-[2] font-semibold shadow-lg"
+            className="flex items-center gap-2 px-6 py-2.5 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-black/90 dark:hover:bg-white/90 transition-colors flex-[2] font-semibold text-sm"
           >
-            <Check size={20} /> {isLastItem ? 'Complete Batch' : 'Save & Next'} (⌘↵)
+            <Check size={18} /> {isLastItem ? 'Complete Batch' : 'Save & Next'} (⌘↵)
           </button>
         </div>
       </div>
 
       {/* Score Preview */}
       <div className={`${showRubric ? 'xl:col-span-1' : 'lg:col-span-1'}`}>
-        <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl border border-gray-300 dark:border-gray-700 p-6 sticky top-4 shadow-lg">
-          <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <Sparkles className="text-yellow-500" />
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 p-6 sticky top-4">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-black dark:text-white">
+            <Sparkles size={20} />
             Live Score
           </h3>
 
-          <div className="space-y-4">
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-4 shadow-md">
-              <div className="text-sm text-blue-100 mb-1">Relevance (70%)</div>
-              <div className="text-4xl font-bold text-white">{relevanceScore.toFixed(2)}</div>
+          <div className="space-y-3">
+            <div className="bg-black/[0.02] dark:bg-white/[0.02] rounded-lg p-4 border border-black/5 dark:border-white/5">
+              <div className="text-xs text-black/60 dark:text-white/60 mb-1.5 font-medium">Relevance (70%)</div>
+              <div className="text-3xl font-bold text-black dark:text-white">{relevanceScore.toFixed(2)}</div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-4 shadow-md">
-              <div className="text-sm text-purple-100 mb-1">Serendipity (30%)</div>
-              <div className="text-4xl font-bold text-white">{serendipityScore.toFixed(2)}</div>
+            <div className="bg-black/[0.02] dark:bg-white/[0.02] rounded-lg p-4 border border-black/5 dark:border-white/5">
+              <div className="text-xs text-black/60 dark:text-white/60 mb-1.5 font-medium">Serendipity (30%)</div>
+              <div className="text-3xl font-bold text-black dark:text-white">{serendipityScore.toFixed(2)}</div>
             </div>
 
-            <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg p-4 shadow-md">
-              <div className="text-sm text-green-100 mb-1">Weighted Score</div>
-              <div className="text-4xl font-bold text-white">{weightedScore.toFixed(2)}</div>
+            <div className="bg-black dark:bg-white rounded-lg p-4">
+              <div className="text-xs text-white/70 dark:text-black/70 mb-1.5 font-medium">Weighted Score</div>
+              <div className="text-3xl font-bold text-white dark:text-black">{weightedScore.toFixed(2)}</div>
             </div>
           </div>
 
           {!grade.relevanceChecks.profileCompliant && (
-            <div className="mt-4 bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-3">
-              <p className="text-red-800 dark:text-red-300 font-semibold text-sm">
+            <div className="mt-4 bg-gray-100 dark:bg-gray-800 border border-gray-400 dark:border-gray-600 rounded-lg p-3">
+              <p className="text-black dark:text-white font-semibold text-sm">
                 ⚠ GATE FAILED - Score = 0
               </p>
             </div>
@@ -585,15 +602,15 @@ function CheckboxItem({
 }) {
   return (
     <label
-      className={`flex items-center gap-3 ${compact ? 'p-2' : 'p-3'} rounded-lg cursor-pointer hover:bg-white/50 dark:hover:bg-gray-700/30 transition-all ${
-        highlight ? 'bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700' : ''
-      } ${checked ? 'bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-800' : 'border border-transparent'}`}
+      className={`flex items-center gap-3 ${compact ? 'p-2' : 'p-3'} rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/30 transition-all ${
+        highlight ? 'bg-gray-100 dark:bg-gray-800 border border-gray-400 dark:border-gray-600' : ''
+      } ${checked ? 'bg-gray-900 text-white dark:bg-gray-100 dark:text-black border border-gray-800 dark:border-gray-300' : 'border border-transparent'}`}
     >
       <input
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="w-4 h-4 text-green-600 rounded focus:ring-2 focus:ring-green-500"
+        className="w-4 h-4 text-black rounded focus:ring-2 focus:ring-black"
       />
       <span className={`flex-1 font-medium ${compact ? 'text-xs' : 'text-sm'}`}>{label}</span>
     </label>

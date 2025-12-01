@@ -35,13 +35,13 @@ export default function AnalyticsComparison({ datasetGrades }: AnalyticsComparis
 
   if (manualGrades.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700 p-12 text-center">
-        <AlertCircle size={48} className="mx-auto mb-4 text-gray-400" />
-        <h3 className="text-xl font-semibold mb-2">No Manual Grades Yet</h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 p-12 text-center">
+        <AlertCircle size={48} className="mx-auto mb-4 text-black/20 dark:text-white/20" />
+        <h3 className="text-xl font-semibold mb-2 text-black dark:text-white">No Manual Grades Yet</h3>
+        <p className="text-black/60 dark:text-white/60 mb-4">
           Start grading recommendations manually to see analytics and comparisons here.
         </p>
-        <p className="text-sm text-gray-500 dark:text-gray-500">
+        <p className="text-sm text-black/50 dark:text-white/50">
           Switch to the "Manual Grading" tab to create your first grade.
         </p>
       </div>
@@ -88,53 +88,55 @@ function OverallComparison({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700 p-6">
-      <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-        <TrendingUp size={24} className="text-blue-600 dark:text-blue-400" />
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 p-6">
+      <h3 className="text-lg font-semibold mb-6 flex items-center gap-2 text-black dark:text-white">
+        <div className="p-1.5 bg-black/5 dark:bg-white/5 rounded">
+          <TrendingUp size={20} />
+        </div>
         Overall Comparison
       </h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-          <h4 className="font-semibold text-blue-900 dark:text-blue-300 mb-3">Dataset Grades (AI)</h4>
-          <div className="space-y-2 text-sm">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-black/[0.02] dark:bg-white/[0.02] rounded-lg p-5 border border-black/5 dark:border-white/5">
+          <h4 className="font-semibold text-black dark:text-white mb-4 text-sm">Dataset Grades (AI)</h4>
+          <div className="space-y-2.5 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Total Records:</span>
-              <span className="font-semibold">{datasetStats.count}</span>
+              <span className="text-black/60 dark:text-white/60">Total Records:</span>
+              <span className="font-semibold text-black dark:text-white">{datasetStats.count}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Avg Relevance:</span>
-              <span className="font-semibold">{datasetStats.avgRelevance.toFixed(2)}</span>
+              <span className="text-black/60 dark:text-white/60">Avg Relevance:</span>
+              <span className="font-semibold text-black dark:text-white">{datasetStats.avgRelevance.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Avg Serendipity:</span>
-              <span className="font-semibold">{datasetStats.avgSerendipity.toFixed(2)}</span>
+              <span className="text-black/60 dark:text-white/60">Avg Serendipity:</span>
+              <span className="font-semibold text-black dark:text-white">{datasetStats.avgSerendipity.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Avg Weighted:</span>
-              <span className="font-semibold">{datasetStats.avgWeighted.toFixed(2)}</span>
+              <span className="text-black/60 dark:text-white/60">Avg Weighted:</span>
+              <span className="font-semibold text-black dark:text-white">{datasetStats.avgWeighted.toFixed(2)}</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
-          <h4 className="font-semibold text-green-900 dark:text-green-300 mb-3">Manual Grades (Human)</h4>
-          <div className="space-y-2 text-sm">
+        <div className="bg-black dark:bg-white rounded-lg p-5 border border-black dark:border-white">
+          <h4 className="font-semibold text-white dark:text-black mb-4 text-sm">Manual Grades (Human)</h4>
+          <div className="space-y-2.5 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Total Records:</span>
-              <span className="font-semibold">{manualStats.count}</span>
+              <span className="text-white/70 dark:text-black/70">Total Records:</span>
+              <span className="font-semibold text-white dark:text-black">{manualStats.count}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Avg Relevance:</span>
-              <span className="font-semibold">{manualStats.avgRelevance.toFixed(2)}</span>
+              <span className="text-white/70 dark:text-black/70">Avg Relevance:</span>
+              <span className="font-semibold text-white dark:text-black">{manualStats.avgRelevance.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Avg Serendipity:</span>
-              <span className="font-semibold">{manualStats.avgSerendipity.toFixed(2)}</span>
+              <span className="text-white/70 dark:text-black/70">Avg Serendipity:</span>
+              <span className="font-semibold text-white dark:text-black">{manualStats.avgSerendipity.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Avg Weighted:</span>
-              <span className="font-semibold">{manualStats.avgWeighted.toFixed(2)}</span>
+              <span className="text-white/70 dark:text-black/70">Avg Weighted:</span>
+              <span className="font-semibold text-white dark:text-black">{manualStats.avgWeighted.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -161,13 +163,13 @@ function OverallComparison({
               },
             ]}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis dataKey="metric" />
             <YAxis domain={[0, 10]} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="Dataset" fill="#3b82f6" name="Dataset (AI)" />
-            <Bar dataKey="Manual" fill="#10b981" name="Manual (Human)" />
+            <Bar dataKey="Dataset" fill="#9ca3af" name="Dataset (AI)" />
+            <Bar dataKey="Manual" fill="#000000" name="Manual (Human)" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -215,36 +217,36 @@ function ScoreDistributionComparison({
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700 p-6">
-      <h3 className="text-xl font-semibold mb-4">Score Distribution Comparison</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 p-6">
+      <h3 className="text-lg font-semibold mb-6 text-black dark:text-white">Score Distribution Comparison</h3>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
-          <h4 className="font-semibold mb-3">Relevance Score Distribution</h4>
-          <ResponsiveContainer width="100%" height={300}>
+          <h4 className="font-semibold mb-4 text-sm text-black dark:text-white">Relevance Score Distribution</h4>
+          <ResponsiveContainer width="100%" height={280}>
             <BarChart data={relevanceComparison}>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="score" label={{ value: 'Score', position: 'insideBottom', offset: -5 }} />
               <YAxis label={{ value: 'Count', angle: -90, position: 'insideLeft' }} />
               <Tooltip />
               <Legend />
-              <Bar dataKey="Dataset" fill="#3b82f6" name="Dataset (AI)" />
-              <Bar dataKey="Manual" fill="#10b981" name="Manual (Human)" />
+              <Bar dataKey="Dataset" fill="#9ca3af" name="Dataset (AI)" />
+              <Bar dataKey="Manual" fill="#000000" name="Manual (Human)" />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         <div>
-          <h4 className="font-semibold mb-3">Serendipity Score Distribution</h4>
-          <ResponsiveContainer width="100%" height={300}>
+          <h4 className="font-semibold mb-4 text-sm text-black dark:text-white">Serendipity Score Distribution</h4>
+          <ResponsiveContainer width="100%" height={280}>
             <BarChart data={serendipityComparison}>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="score" label={{ value: 'Score', position: 'insideBottom', offset: -5 }} />
               <YAxis label={{ value: 'Count', angle: -90, position: 'insideLeft' }} />
               <Tooltip />
               <Legend />
-              <Bar dataKey="Dataset" fill="#a855f7" name="Dataset (AI)" />
-              <Bar dataKey="Manual" fill="#ec4899" name="Manual (Human)" />
+              <Bar dataKey="Dataset" fill="#6b7280" name="Dataset (AI)" />
+              <Bar dataKey="Manual" fill="#1f2937" name="Manual (Human)" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -276,39 +278,41 @@ function MatchedPairsAnalysis({
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700 p-6">
-      <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-        <CheckCircle size={24} className="text-green-600 dark:text-green-400" />
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 p-6">
+      <h3 className="text-lg font-semibold mb-6 flex items-center gap-2 text-black dark:text-white">
+        <div className="p-1.5 bg-black/5 dark:bg-white/5 rounded">
+          <CheckCircle size={20} />
+        </div>
         Matched Pairs Analysis ({pairs.length} pairs)
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Avg Relevance Difference</div>
-          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+        <div className="bg-black/[0.02] dark:bg-white/[0.02] rounded-lg p-4 border border-black/5 dark:border-white/5">
+          <div className="text-xs text-black/60 dark:text-white/60 mb-1.5 font-medium">Avg Relevance Difference</div>
+          <div className="text-2xl font-bold text-black dark:text-white">
             {avgRelevanceDiff > 0 ? '+' : ''}{avgRelevanceDiff.toFixed(2)}
           </div>
-          <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+          <div className="text-xs text-black/50 dark:text-white/50 mt-1">
             {avgRelevanceDiff > 0 ? 'AI scores higher' : 'Human scores higher'}
           </div>
         </div>
 
-        <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Avg Serendipity Difference</div>
-          <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+        <div className="bg-black/[0.02] dark:bg-white/[0.02] rounded-lg p-4 border border-black/5 dark:border-white/5">
+          <div className="text-xs text-black/60 dark:text-white/60 mb-1.5 font-medium">Avg Serendipity Difference</div>
+          <div className="text-2xl font-bold text-black dark:text-white">
             {avgSerendipityDiff > 0 ? '+' : ''}{avgSerendipityDiff.toFixed(2)}
           </div>
-          <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+          <div className="text-xs text-black/50 dark:text-white/50 mt-1">
             {avgSerendipityDiff > 0 ? 'AI scores higher' : 'Human scores higher'}
           </div>
         </div>
 
-        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Avg Weighted Difference</div>
-          <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+        <div className="bg-black dark:bg-white rounded-lg p-4">
+          <div className="text-xs text-white/70 dark:text-black/70 mb-1.5 font-medium">Avg Weighted Difference</div>
+          <div className="text-2xl font-bold text-white dark:text-black">
             {avgWeightedDiff > 0 ? '+' : ''}{avgWeightedDiff.toFixed(2)}
           </div>
-          <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+          <div className="text-xs text-white/60 dark:text-black/60 mt-1">
             {avgWeightedDiff > 0 ? 'AI scores higher' : 'Human scores higher'}
           </div>
         </div>
@@ -316,10 +320,10 @@ function MatchedPairsAnalysis({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
-          <h4 className="font-semibold mb-3">Relevance: AI vs Human</h4>
-          <ResponsiveContainer width="100%" height={300}>
+          <h4 className="font-semibold mb-4 text-sm text-black dark:text-white">Relevance: AI vs Human</h4>
+          <ResponsiveContainer width="100%" height={280}>
             <ScatterChart>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="datasetRelevance" type="number" domain={[0, 10]} label={{ value: 'Dataset (AI)', position: 'insideBottom', offset: -5 }} />
               <YAxis dataKey="manualRelevance" type="number" domain={[0, 10]} label={{ value: 'Manual (Human)', angle: -90, position: 'insideLeft' }} />
               <Tooltip
@@ -327,25 +331,25 @@ function MatchedPairsAnalysis({
                   if (payload && payload.length > 0) {
                     const data = payload[0].payload;
                     return (
-                      <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded p-3 shadow-lg">
-                        <p className="font-semibold text-sm">{data.recommendation}</p>
-                        <p className="text-xs">AI: {data.datasetRelevance} | Human: {data.manualRelevance}</p>
+                      <div className="bg-white dark:bg-gray-900 border border-black/10 dark:border-gray-700 rounded p-3 shadow-sm">
+                        <p className="font-semibold text-sm text-black dark:text-white">{data.recommendation}</p>
+                        <p className="text-xs text-black/60 dark:text-white/60">AI: {data.datasetRelevance} | Human: {data.manualRelevance}</p>
                       </div>
                     );
                   }
                   return null;
                 }}
               />
-              <Scatter data={scatterData} fill="#3b82f6" />
+              <Scatter data={scatterData} fill="#000000" />
             </ScatterChart>
           </ResponsiveContainer>
         </div>
 
         <div>
-          <h4 className="font-semibold mb-3">Serendipity: AI vs Human</h4>
-          <ResponsiveContainer width="100%" height={300}>
+          <h4 className="font-semibold mb-4 text-sm text-black dark:text-white">Serendipity: AI vs Human</h4>
+          <ResponsiveContainer width="100%" height={280}>
             <ScatterChart>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="datasetSerendipity" type="number" domain={[0, 10]} label={{ value: 'Dataset (AI)', position: 'insideBottom', offset: -5 }} />
               <YAxis dataKey="manualSerendipity" type="number" domain={[0, 10]} label={{ value: 'Manual (Human)', angle: -90, position: 'insideLeft' }} />
               <Tooltip
@@ -353,16 +357,16 @@ function MatchedPairsAnalysis({
                   if (payload && payload.length > 0) {
                     const data = payload[0].payload;
                     return (
-                      <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded p-3 shadow-lg">
-                        <p className="font-semibold text-sm">{data.recommendation}</p>
-                        <p className="text-xs">AI: {data.datasetSerendipity} | Human: {data.manualSerendipity}</p>
+                      <div className="bg-white dark:bg-gray-900 border border-black/10 dark:border-gray-700 rounded p-3 shadow-sm">
+                        <p className="font-semibold text-sm text-black dark:text-white">{data.recommendation}</p>
+                        <p className="text-xs text-black/60 dark:text-white/60">AI: {data.datasetSerendipity} | Human: {data.manualSerendipity}</p>
                       </div>
                     );
                   }
                   return null;
                 }}
               />
-              <Scatter data={scatterData} fill="#a855f7" />
+              <Scatter data={scatterData} fill="#4b5563" />
             </ScatterChart>
           </ResponsiveContainer>
         </div>
@@ -377,41 +381,41 @@ function MatchedPairsTable({
   pairs: Array<{ dataset: GradeRecord; manual: ManualGrade }>;
 }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700 overflow-hidden">
-      <div className="p-4 border-b border-gray-300 dark:border-gray-700">
-        <h3 className="text-lg font-semibold">Matched Pairs Details</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 overflow-hidden">
+      <div className="p-5 border-b border-black/10 dark:border-gray-700">
+        <h3 className="text-base font-semibold text-black dark:text-white">Matched Pairs Details</h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 dark:bg-gray-900">
+          <thead className="bg-black/[0.02] dark:bg-white/[0.02]">
             <tr>
-              <th className="px-4 py-3 text-left font-semibold">Query</th>
-              <th className="px-4 py-3 text-left font-semibold">Recommendation</th>
-              <th className="px-4 py-3 text-center font-semibold">AI Rel</th>
-              <th className="px-4 py-3 text-center font-semibold">Human Rel</th>
-              <th className="px-4 py-3 text-center font-semibold">Δ Rel</th>
-              <th className="px-4 py-3 text-center font-semibold">AI Ser</th>
-              <th className="px-4 py-3 text-center font-semibold">Human Ser</th>
-              <th className="px-4 py-3 text-center font-semibold">Δ Ser</th>
+              <th className="px-4 py-3 text-left font-semibold text-black dark:text-white text-xs">Query</th>
+              <th className="px-4 py-3 text-left font-semibold text-black dark:text-white text-xs">Recommendation</th>
+              <th className="px-4 py-3 text-center font-semibold text-black dark:text-white text-xs">AI Rel</th>
+              <th className="px-4 py-3 text-center font-semibold text-black dark:text-white text-xs">Human Rel</th>
+              <th className="px-4 py-3 text-center font-semibold text-black dark:text-white text-xs">Δ Rel</th>
+              <th className="px-4 py-3 text-center font-semibold text-black dark:text-white text-xs">AI Ser</th>
+              <th className="px-4 py-3 text-center font-semibold text-black dark:text-white text-xs">Human Ser</th>
+              <th className="px-4 py-3 text-center font-semibold text-black dark:text-white text-xs">Δ Ser</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+          <tbody className="divide-y divide-black/5 dark:divide-white/5">
             {pairs.map((pair, idx) => {
               const relDiff = pair.dataset.relevance_format_score - pair.manual.relevanceScore;
               const serDiff = pair.dataset.serendipity_score - pair.manual.serendipityScore;
 
               return (
-                <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                  <td className="px-4 py-3 max-w-xs truncate">{pair.dataset.query}</td>
-                  <td className="px-4 py-3 font-medium">{pair.dataset.recommendation}</td>
-                  <td className="px-4 py-3 text-center">{pair.dataset.relevance_format_score.toFixed(1)}</td>
-                  <td className="px-4 py-3 text-center">{pair.manual.relevanceScore.toFixed(1)}</td>
-                  <td className={`px-4 py-3 text-center font-semibold ${relDiff > 0 ? 'text-blue-600' : relDiff < 0 ? 'text-green-600' : ''}`}>
+                <tr key={idx} className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors">
+                  <td className="px-4 py-3 max-w-xs truncate text-black dark:text-white">{pair.dataset.query}</td>
+                  <td className="px-4 py-3 font-medium text-black dark:text-white">{pair.dataset.recommendation}</td>
+                  <td className="px-4 py-3 text-center text-black/80 dark:text-white/80">{pair.dataset.relevance_format_score.toFixed(1)}</td>
+                  <td className="px-4 py-3 text-center text-black/80 dark:text-white/80">{pair.manual.relevanceScore.toFixed(1)}</td>
+                  <td className={`px-4 py-3 text-center font-semibold ${relDiff > 0 ? 'text-black dark:text-white' : relDiff < 0 ? 'text-gray-600 dark:text-gray-400' : 'text-black/60 dark:text-white/60'}`}>
                     {relDiff > 0 ? '+' : ''}{relDiff.toFixed(1)}
                   </td>
-                  <td className="px-4 py-3 text-center">{pair.dataset.serendipity_score.toFixed(1)}</td>
-                  <td className="px-4 py-3 text-center">{pair.manual.serendipityScore.toFixed(1)}</td>
-                  <td className={`px-4 py-3 text-center font-semibold ${serDiff > 0 ? 'text-purple-600' : serDiff < 0 ? 'text-pink-600' : ''}`}>
+                  <td className="px-4 py-3 text-center text-black/80 dark:text-white/80">{pair.dataset.serendipity_score.toFixed(1)}</td>
+                  <td className="px-4 py-3 text-center text-black/80 dark:text-white/80">{pair.manual.serendipityScore.toFixed(1)}</td>
+                  <td className={`px-4 py-3 text-center font-semibold ${serDiff > 0 ? 'text-black dark:text-white' : serDiff < 0 ? 'text-gray-600 dark:text-gray-400' : 'text-black/60 dark:text-white/60'}`}>
                     {serDiff > 0 ? '+' : ''}{serDiff.toFixed(1)}
                   </td>
                 </tr>
@@ -432,41 +436,41 @@ function GraderInsights({ manualGrades }: { manualGrades: ManualGrade[] }) {
   const gateViolations = manualGrades.filter(g => !g.relevanceChecks.profileCompliant).length;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700 p-6">
-      <h3 className="text-xl font-semibold mb-4">Manual Grading Insights</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-black/10 dark:border-gray-700 p-6">
+      <h3 className="text-lg font-semibold mb-6 text-black dark:text-white">Manual Grading Insights</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Perfect Relevance Scores</div>
-          <div className="text-3xl font-bold text-green-600 dark:text-green-400">{perfectRelevance}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+        <div className="bg-black/[0.02] dark:bg-white/[0.02] rounded-lg p-4 border border-black/5 dark:border-white/5">
+          <div className="text-xs text-black/60 dark:text-white/60 mb-1.5 font-medium">Perfect Relevance Scores</div>
+          <div className="text-3xl font-bold text-black dark:text-white">{perfectRelevance}</div>
+          <div className="text-xs text-black/50 dark:text-white/50 mt-1">
             {((perfectRelevance / manualGrades.length) * 100).toFixed(1)}% of all grades
           </div>
         </div>
 
-        <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Perfect Serendipity Scores</div>
-          <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">{perfectSerendipity}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+        <div className="bg-black/[0.02] dark:bg-white/[0.02] rounded-lg p-4 border border-black/5 dark:border-white/5">
+          <div className="text-xs text-black/60 dark:text-white/60 mb-1.5 font-medium">Perfect Serendipity Scores</div>
+          <div className="text-3xl font-bold text-black dark:text-white">{perfectSerendipity}</div>
+          <div className="text-xs text-black/50 dark:text-white/50 mt-1">
             {((perfectSerendipity / manualGrades.length) * 100).toFixed(1)}% of all grades
           </div>
         </div>
 
-        <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 border border-red-200 dark:border-red-800">
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">GATE Violations</div>
-          <div className="text-3xl font-bold text-red-600 dark:text-red-400">{gateViolations}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+        <div className="bg-black dark:bg-white rounded-lg p-4">
+          <div className="text-xs text-white/70 dark:text-black/70 mb-1.5 font-medium">GATE Violations</div>
+          <div className="text-3xl font-bold text-white dark:text-black">{gateViolations}</div>
+          <div className="text-xs text-white/60 dark:text-black/60 mt-1">
             Profile non-compliant (score = 0)
           </div>
         </div>
       </div>
 
       {graders.length > 0 && (
-        <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900/50 rounded">
-          <h4 className="font-semibold mb-2">Active Graders</h4>
+        <div className="mt-6 p-4 bg-black/[0.02] dark:bg-white/[0.02] rounded-lg border border-black/5 dark:border-white/5">
+          <h4 className="font-semibold mb-3 text-sm text-black dark:text-white">Active Graders</h4>
           <div className="flex flex-wrap gap-2">
             {graders.map((grader, idx) => (
-              <span key={idx} className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm">
+              <span key={idx} className="px-3 py-1.5 bg-black/5 dark:bg-white/5 text-black dark:text-white rounded-lg text-sm font-medium">
                 {grader}
               </span>
             ))}

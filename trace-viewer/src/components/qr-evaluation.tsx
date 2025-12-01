@@ -18,13 +18,13 @@ const ScoreBadge = ({ score }: { score: number }) => {
   let colorClass = "bg-gray-100 text-gray-800";
 
   if (score >= 9) {
-    colorClass = "bg-green-100 text-green-800";
+    colorClass = "bg-black text-white";
   } else if (score >= 7) {
-    colorClass = "bg-yellow-100 text-yellow-800";
+    colorClass = "bg-gray-700 text-white";
   } else if (score >= 5) {
-    colorClass = "bg-orange-100 text-orange-800";
+    colorClass = "bg-gray-400 text-black";
   } else {
-    colorClass = "bg-red-100 text-red-800";
+    colorClass = "bg-gray-200 text-gray-800";
   }
 
   return (
@@ -44,12 +44,12 @@ const StatCard = ({
   color?: string;
 }) => {
   const colorClasses = {
-    gray: "bg-gray-50 border-gray-200",
-    blue: "bg-blue-50 border-blue-200",
-    purple: "bg-purple-50 border-purple-200",
-    green: "bg-green-50 border-green-200",
-    orange: "bg-orange-50 border-orange-200",
-    pink: "bg-pink-50 border-pink-200",
+    gray: "bg-white border-black/10",
+    blue: "bg-white border-black/10",
+    purple: "bg-white border-black/10",
+    green: "bg-white border-black/10",
+    orange: "bg-white border-black/10",
+    pink: "bg-white border-black/10",
   };
 
   return (
@@ -104,7 +104,7 @@ const DetailModal = ({
         <div className="p-6 space-y-6">
           {/* Scores */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="rounded-lg border border-black/10 bg-blue-50 p-4">
+            <div className="rounded-lg border border-black/10 bg-white p-4">
               <div className="text-xs font-medium uppercase tracking-wider text-black/50 mb-1">
                 Relevance
               </div>
@@ -112,7 +112,7 @@ const DetailModal = ({
                 {record.relevance_format_score.toFixed(1)}
               </div>
             </div>
-            <div className="rounded-lg border border-black/10 bg-purple-50 p-4">
+            <div className="rounded-lg border border-black/10 bg-white p-4">
               <div className="text-xs font-medium uppercase tracking-wider text-black/50 mb-1">
                 Serendipity
               </div>
@@ -120,11 +120,11 @@ const DetailModal = ({
                 {record.serendipity_score.toFixed(1)}
               </div>
             </div>
-            <div className="rounded-lg border border-black/10 bg-green-50 p-4">
-              <div className="text-xs font-medium uppercase tracking-wider text-black/50 mb-1">
+            <div className="rounded-lg border border-black/10 bg-black p-4">
+              <div className="text-xs font-medium uppercase tracking-wider text-white/70 mb-1">
                 Weighted
               </div>
-              <div className="text-3xl font-bold text-black">
+              <div className="text-3xl font-bold text-white">
                 {record.weighted_score.toFixed(1)}
               </div>
             </div>
@@ -293,8 +293,8 @@ export default function QREvaluation() {
 
   if (errorMessage) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-6">
-        <p className="text-sm text-red-800">Error: {errorMessage}</p>
+      <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
+        <p className="text-sm text-black">Error: {errorMessage}</p>
       </div>
     );
   }
@@ -302,10 +302,10 @@ export default function QREvaluation() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="rounded-lg border border-black/10 bg-gradient-to-br from-indigo-50 to-purple-50 p-6">
+      <div className="rounded-lg border border-black/10 bg-white p-6">
         <div className="flex items-start gap-4">
-          <div className="p-3 bg-white rounded-lg shadow-sm">
-            <Target className="w-8 h-8 text-indigo-600" />
+          <div className="p-3 bg-black/5 rounded-lg shadow-sm">
+            <Target className="w-8 h-8 text-black" />
           </div>
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-black mb-2">
@@ -439,7 +439,7 @@ export default function QREvaluation() {
                     {record.query}
                   </td>
                   <td className="px-4 py-3 text-sm">
-                    <span className="px-2 py-1 bg-blue-50 text-blue-800 rounded text-xs">
+                    <span className="px-2 py-1 bg-gray-100 text-black rounded text-xs">
                       {friendlyDaypart(record.daypart)}
                     </span>
                   </td>
