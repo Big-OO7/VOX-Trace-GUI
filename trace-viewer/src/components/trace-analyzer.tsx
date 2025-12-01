@@ -15,8 +15,8 @@ interface Message {
 
 interface TraceReference {
   conversationId: string;
-  traceIndex?: number;
   data: TraceRecord;
+  consumerId?: string;
 }
 
 export default function TraceAnalyzer() {
@@ -95,24 +95,22 @@ export default function TraceAnalyzer() {
       // Build trace context from selected traces
       const traceContext = selectedTraces.map(ref => {
         const trace = ref.data;
+        const consumerId = trace.payload.ids?.consumer_id || trace.payload.ids?.['consumer.id'] || ref.consumerId || '';
         const relatedGrades = gradeData.filter(
-          g => g.consumer_id.toString() === trace.consumer_id
+          g => consumerId && g.consumer_id.toString() === consumerId.toString()
         );
 
         return {
-          conversation_id: trace.conversation_id,
-          consumer_id: trace.consumer_id,
-          trace_count: trace.trace_count,
-          traces: trace.traces.map(t => ({
-            query: t.query,
-            rewrites: t.rewrites,
-            stores: t.stores.map(s => ({
-              store_name: s.store_name,
-              business_id: s.business_id,
-              cuisine: s.cuisine,
-              grading: s.grading,
-            })),
-          })),
+          conversation_id: trace.conversationId,
+          consumer_id: consumerId,
+          trace_count: trace.traceCount,
+          traces: trace.payload.traces?.map(t => ({
+            original_query: t.original_query,
+            rewritten_queries: t.rewritten_queries,
+            store_recommendations: t.store_recommendations,
+          })) || [],
+          query_log: trace.payload.query_log || [],
+          consumer_profile: trace.payload.consumer_profile,
           related_grades: relatedGrades,
         };
       });
@@ -152,11 +150,13 @@ export default function TraceAnalyzer() {
   };
 
   const handleAddTrace = (trace: TraceRecord) => {
+    const consumerId = trace.payload.ids?.consumer_id || trace.payload.ids?.['consumer.id'] || '';
     const ref: TraceReference = {
-      conversationId: trace.conversation_id,
+      conversationId: trace.conversationId,
       data: trace,
+      consumerId: consumerId?.toString(),
     };
-    if (!selectedTraces.find(t => t.conversationId === trace.conversation_id)) {
+    if (!selectedTraces.find(t => t.conversationId === trace.conversationId)) {
       setSelectedTraces(prev => [...prev, ref]);
     }
     setShowTracePicker(false);
@@ -166,10 +166,13 @@ export default function TraceAnalyzer() {
     setSelectedTraces(prev => prev.filter(t => t.conversationId !== conversationId));
   };
 
-  const filteredTraces = traces.filter(trace =>
-    trace.conversation_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    trace.consumer_id?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredTraces = traces.filter(trace => {
+    const consumerId = trace.payload.ids?.consumer_id || trace.payload.ids?.['consumer.id'] || '';
+    return (
+      trace.conversationId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      consumerId.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   return (
     <div className="flex gap-6 h-[calc(100vh-280px)]">
@@ -331,12 +334,13 @@ export default function TraceAnalyzer() {
               <div className="p-4 space-y-2">
                 {filteredTraces.map(trace => {
                   const isSelected = selectedTraces.some(
-                    t => t.conversationId === trace.conversation_id
+                    t => t.conversationId === trace.conversationId
                   );
+                  const consumerId = trace.payload.ids?.consumer_id || trace.payload.ids?.['consumer.id'] || 'N/A';
 
                   return (
                     <div
-                      key={trace.conversation_id}
+                      key={trace.conversationId}
                       onClick={() => !isSelected && handleAddTrace(trace)}
                       className={`p-3 rounded-lg border cursor-pointer transition ${
                         isSelected
@@ -345,13 +349,13 @@ export default function TraceAnalyzer() {
                       }`}
                     >
                       <div className="font-medium text-sm text-black mb-1">
-                        {trace.conversation_id}
+                        {trace.conversationId}
                       </div>
                       <div className="text-xs text-black/50">
-                        Consumer: {trace.consumer_id}
+                        Consumer: {consumerId}
                       </div>
                       <div className="text-xs text-black/50">
-                        Traces: {trace.trace_count}
+                        Traces: {trace.traceCount}
                       </div>
                     </div>
                   );
