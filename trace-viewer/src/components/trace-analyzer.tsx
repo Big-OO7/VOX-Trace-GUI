@@ -153,8 +153,11 @@ export default function TraceAnalyzer() {
   };
 
   const handleAddTrace = (record: GradeRecord) => {
+    // Use consumer_id + query + recommendation to make unique ID
+    const traceId = `${record.consumer_id}-${record.query}-${record.recommendation}`;
+
     const trace: EnrichedTrace = {
-      conversationId: `${record.consumer_id}-${record.query}`,
+      conversationId: traceId,
       consumerId: record.consumer_id.toString(),
       query: record.query,
       recommendation: record.recommendation,
@@ -165,7 +168,6 @@ export default function TraceAnalyzer() {
     if (!selectedTraces.find(t => t.conversationId === trace.conversationId)) {
       setSelectedTraces(prev => [...prev, trace]);
     }
-    setShowTracePicker(false);
   };
 
   const handleRemoveTrace = (conversationId: string) => {
@@ -267,7 +269,9 @@ export default function TraceAnalyzer() {
                   <FileText className="w-3 h-3 text-black/40" />
                   <span className="font-medium">{trace.consumerId}</span>
                   <span className="text-black/50">·</span>
-                  <span className="text-black/60 max-w-[200px] truncate">{trace.query}</span>
+                  <span className="text-black/60 max-w-[150px] truncate" title={trace.query}>{trace.query}</span>
+                  <span className="text-black/50">→</span>
+                  <span className="text-black/60 max-w-[150px] truncate" title={trace.recommendation}>{trace.recommendation}</span>
                   <button
                     onClick={() => handleRemoveTrace(trace.conversationId)}
                     className="text-black/40 hover:text-black ml-1"
@@ -352,7 +356,7 @@ export default function TraceAnalyzer() {
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 space-y-2">
             {filteredRecords.map((record, idx) => {
-              const traceId = `${record.consumer_id}-${record.query}`;
+              const traceId = `${record.consumer_id}-${record.query}-${record.recommendation}`;
               const isSelected = selectedTraces.some(t => t.conversationId === traceId);
 
               return (
