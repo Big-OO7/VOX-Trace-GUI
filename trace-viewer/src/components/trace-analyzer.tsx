@@ -61,7 +61,7 @@ export default function TraceAnalyzer() {
       skipEmptyLines: true,
       complete: (results) => {
         try {
-          const records = buildTraceRecords(results.data);
+          const records = buildTraceRecords(results.data as any);
           setTraces(records);
         } catch (error) {
           console.error('Error parsing traces:', error);
