@@ -30,7 +30,6 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
   const [currentGrade, setCurrentGrade] = useState<ManualGrade | null>(null);
   const [completedGrades, setCompletedGrades] = useState<Set<number>>(new Set());
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
-  const [compactView, setCompactView] = useState(false);
   const [showRubric, setShowRubric] = useState(true);
   const [gradesCache, setGradesCache] = useState<Map<number, ManualGrade>>(new Map());
 
@@ -130,6 +129,9 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
 
     saveGradeToLocalStorage(gradeToSave);
     setCompletedGrades(new Set([...completedGrades, currentIndex]));
+
+    // Update cache with saved grade
+    setGradesCache(new Map(gradesCache.set(currentIndex, gradeToSave)));
 
     if (currentIndex < batchItems.length - 1) {
       setCurrentIndex(currentIndex + 1);
@@ -275,7 +277,6 @@ export default function RLHFGrading({ datasetGrades }: RLHFGradingProps) {
               canGoPrevious={currentIndex > 0}
               canGoNext={currentIndex < batchItems.length - 1}
               isLastItem={currentIndex === batchItems.length - 1}
-              compactView={compactView}
               showRubric={showRubric}
             />
           )}
@@ -413,7 +414,6 @@ function GradingInterface({
   canGoPrevious: boolean;
   canGoNext: boolean;
   isLastItem: boolean;
-  compactView: boolean;
   showRubric: boolean;
 }) {
   const updateRelevanceCheck = (key: keyof RelevanceChecks, value: boolean) => {
@@ -477,17 +477,17 @@ function GradingInterface({
           <h4 className="font-semibold text-base text-black dark:text-white mb-3">
             Relevance & Format (70%)
           </h4>
-          <div className={`space-y-${compactView ? '1' : '2'}`}>
-            <CheckboxItem label="Primary intent match (+3)" checked={grade.relevanceChecks.primaryIntentMatch} onChange={(v) => updateRelevanceCheck('primaryIntentMatch', v)} compact={compactView} />
-            <CheckboxItem label="Descriptive traits preserved (+2)" checked={grade.relevanceChecks.descriptiveTraitsPreserved} onChange={(v) => updateRelevanceCheck('descriptiveTraitsPreserved', v)} compact={compactView} />
-            <CheckboxItem label="Category/dietary match (+2)" checked={grade.relevanceChecks.categoryDietaryMatch} onChange={(v) => updateRelevanceCheck('categoryDietaryMatch', v)} compact={compactView} />
-            <CheckboxItem label="Situational suitability (+2)" checked={grade.relevanceChecks.situationalSuitability} onChange={(v) => updateRelevanceCheck('situationalSuitability', v)} compact={compactView} />
-            <CheckboxItem label="Explicit constraints met (+2)" checked={grade.relevanceChecks.explicitConstraintsMet} onChange={(v) => updateRelevanceCheck('explicitConstraintsMet', v)} compact={compactView} />
-            <CheckboxItem label="Profile compliant (+1) [GATE]" checked={grade.relevanceChecks.profileCompliant} onChange={(v) => updateRelevanceCheck('profileCompliant', v)} highlight={!grade.relevanceChecks.profileCompliant} compact={compactView} />
-            <CheckboxItem label="Output clarity (+2)" checked={grade.relevanceChecks.outputClarity} onChange={(v) => updateRelevanceCheck('outputClarity', v)} compact={compactView} />
-            <CheckboxItem label="Mainstream availability (+2)" checked={grade.relevanceChecks.mainstreamAvailability} onChange={(v) => updateRelevanceCheck('mainstreamAvailability', v)} compact={compactView} />
-            <CheckboxItem label="Format correctness (+2)" checked={grade.relevanceChecks.formatCorrectness} onChange={(v) => updateRelevanceCheck('formatCorrectness', v)} compact={compactView} />
-            <CheckboxItem label="Conciseness (+2)" checked={grade.relevanceChecks.conciseness} onChange={(v) => updateRelevanceCheck('conciseness', v)} compact={compactView} />
+          <div className="space-y-2">
+            <CheckboxItem label="Primary intent match (+3)" checked={grade.relevanceChecks.primaryIntentMatch} onChange={(v) => updateRelevanceCheck('primaryIntentMatch', v)} />
+            <CheckboxItem label="Descriptive traits preserved (+2)" checked={grade.relevanceChecks.descriptiveTraitsPreserved} onChange={(v) => updateRelevanceCheck('descriptiveTraitsPreserved', v)} />
+            <CheckboxItem label="Category/dietary match (+2)" checked={grade.relevanceChecks.categoryDietaryMatch} onChange={(v) => updateRelevanceCheck('categoryDietaryMatch', v)} />
+            <CheckboxItem label="Situational suitability (+2)" checked={grade.relevanceChecks.situationalSuitability} onChange={(v) => updateRelevanceCheck('situationalSuitability', v)} />
+            <CheckboxItem label="Explicit constraints met (+2)" checked={grade.relevanceChecks.explicitConstraintsMet} onChange={(v) => updateRelevanceCheck('explicitConstraintsMet', v)} />
+            <CheckboxItem label="Profile compliant (+1) [GATE]" checked={grade.relevanceChecks.profileCompliant} onChange={(v) => updateRelevanceCheck('profileCompliant', v)} highlight={!grade.relevanceChecks.profileCompliant} />
+            <CheckboxItem label="Output clarity (+2)" checked={grade.relevanceChecks.outputClarity} onChange={(v) => updateRelevanceCheck('outputClarity', v)} />
+            <CheckboxItem label="Mainstream availability (+2)" checked={grade.relevanceChecks.mainstreamAvailability} onChange={(v) => updateRelevanceCheck('mainstreamAvailability', v)} />
+            <CheckboxItem label="Format correctness (+2)" checked={grade.relevanceChecks.formatCorrectness} onChange={(v) => updateRelevanceCheck('formatCorrectness', v)} />
+            <CheckboxItem label="Conciseness (+2)" checked={grade.relevanceChecks.conciseness} onChange={(v) => updateRelevanceCheck('conciseness', v)} />
           </div>
         </div>
 
@@ -508,12 +508,12 @@ function GradingInterface({
               ))}
             </select>
           </div>
-          <div className={`space-y-${compactView ? '1' : '2'}`}>
-            <CheckboxItem label="Low discoverability (+1)" checked={grade.serendipityChecks.lowDiscoverability} onChange={(v) => updateSerendipityCheck('lowDiscoverability', v)} compact={compactView} />
-            <CheckboxItem label="Familiar ingredients new context (+1)" checked={grade.serendipityChecks.familiarIngredientsNewContext} onChange={(v) => updateSerendipityCheck('familiarIngredientsNewContext', v)} compact={compactView} />
-            <CheckboxItem label="Context fit while novel (+1)" checked={grade.serendipityChecks.contextFitWhileNovel} onChange={(v) => updateSerendipityCheck('contextFitWhileNovel', v)} compact={compactView} />
-            <CheckboxItem label='"Aha moment" (+1)' checked={grade.serendipityChecks.ahaMoment} onChange={(v) => updateSerendipityCheck('ahaMoment', v)} compact={compactView} />
-            <CheckboxItem label="Creates curiosity (+1)" checked={grade.serendipityChecks.createsCuriosity} onChange={(v) => updateSerendipityCheck('createsCuriosity', v)} compact={compactView} />
+          <div className="space-y-2">
+            <CheckboxItem label="Low discoverability (+1)" checked={grade.serendipityChecks.lowDiscoverability} onChange={(v) => updateSerendipityCheck('lowDiscoverability', v)} />
+            <CheckboxItem label="Familiar ingredients new context (+1)" checked={grade.serendipityChecks.familiarIngredientsNewContext} onChange={(v) => updateSerendipityCheck('familiarIngredientsNewContext', v)} />
+            <CheckboxItem label="Context fit while novel (+1)" checked={grade.serendipityChecks.contextFitWhileNovel} onChange={(v) => updateSerendipityCheck('contextFitWhileNovel', v)} />
+            <CheckboxItem label='"Aha moment" (+1)' checked={grade.serendipityChecks.ahaMoment} onChange={(v) => updateSerendipityCheck('ahaMoment', v)} />
+            <CheckboxItem label="Creates curiosity (+1)" checked={grade.serendipityChecks.createsCuriosity} onChange={(v) => updateSerendipityCheck('createsCuriosity', v)} />
           </div>
         </div>
 
@@ -592,17 +592,15 @@ function CheckboxItem({
   checked,
   onChange,
   highlight = false,
-  compact = false,
 }: {
   label: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
   highlight?: boolean;
-  compact?: boolean;
 }) {
   return (
     <label
-      className={`flex items-center gap-3 ${compact ? 'p-2' : 'p-3'} rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/30 transition-all ${
+      className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/30 transition-all ${
         highlight ? 'bg-gray-100 dark:bg-gray-800 border border-gray-400 dark:border-gray-600' : ''
       } ${checked ? 'bg-gray-900 text-white dark:bg-gray-100 dark:text-black border border-gray-800 dark:border-gray-300' : 'border border-transparent'}`}
     >
@@ -612,7 +610,7 @@ function CheckboxItem({
         onChange={(e) => onChange(e.target.checked)}
         className="w-4 h-4 text-black rounded focus:ring-2 focus:ring-black"
       />
-      <span className={`flex-1 font-medium ${compact ? 'text-xs' : 'text-sm'}`}>{label}</span>
+      <span className="flex-1 font-medium text-sm">{label}</span>
     </label>
   );
 }
