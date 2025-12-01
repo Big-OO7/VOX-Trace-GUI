@@ -5,12 +5,13 @@ import TraceDashboard from "@/components/trace-dashboard";
 import QREvaluation from "@/components/qr-evaluation";
 import RLHFGrading from "@/components/rlhf-grading";
 import AnalyticsComparison from "@/components/analytics-comparison";
+import TraceAnalyzer from "@/components/trace-analyzer";
 import Login from "@/components/login";
 import { LogOut } from "lucide-react";
 import { loadGradeData } from "@/lib/grade-data";
 import { GradeRecord } from "@/lib/grade-types";
 
-type TabType = "traces" | "qr" | "rlhf" | "analytics";
+type TabType = "traces" | "qr" | "rlhf" | "analytics" | "analyzer";
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -68,6 +69,7 @@ export default function Home() {
                 {activeTab === "qr" && "QR Evaluation"}
                 {activeTab === "rlhf" && "RLHF Grading"}
                 {activeTab === "analytics" && "Analytics & Comparison"}
+                {activeTab === "analyzer" && "AI Trace Analyzer"}
               </h1>
             </div>
             <button
@@ -124,6 +126,16 @@ export default function Home() {
             >
               Analytics & Comparison
             </button>
+            <button
+              onClick={() => setActiveTab("analyzer")}
+              className={`px-6 py-3 text-sm font-semibold transition-colors border-b-2 whitespace-nowrap ${
+                activeTab === "analyzer"
+                  ? "border-black text-black"
+                  : "border-transparent text-black/40 hover:text-black/60"
+              }`}
+            >
+              AI Trace Analyzer
+            </button>
           </div>
         </div>
 
@@ -132,6 +144,7 @@ export default function Home() {
         {activeTab === "qr" && <QREvaluation />}
         {activeTab === "rlhf" && <RLHFGrading datasetGrades={gradeData} />}
         {activeTab === "analytics" && <AnalyticsComparison datasetGrades={gradeData} />}
+        {activeTab === "analyzer" && <TraceAnalyzer />}
       </main>
     </div>
   );

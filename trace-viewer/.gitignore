@@ -42,3 +42,6 @@ next-env.d.ts
 
 trace-viewer/public/data/om-trace-zesty.csv
 @trace-viewer/public/data/om-trace-zesty.csv
+
+# Exclude grades-viewer subdirectory (separate app)
+grades-viewer/
