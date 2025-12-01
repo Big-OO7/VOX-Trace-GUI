@@ -1,3 +1,6 @@
 # Exclude large CSV files from Vercel deployment
 public/data/*.csv
 *.csv
+
+# Exclude grades-viewer subdirectory (separate app)
+grades-viewer/
