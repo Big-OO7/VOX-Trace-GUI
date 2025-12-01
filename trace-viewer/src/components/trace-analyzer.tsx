@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { Search, Send, Loader2, Upload, AlertCircle, Bot, User, X, FileText } from 'lucide-react';
+import { Search, Send, Loader2, Upload, AlertCircle, Bot, User, X, FileText, Trash2, RotateCcw } from 'lucide-react';
 import Papa from 'papaparse';
 import type { TraceRecord, GradingData, FuzzyGradingData } from '@/lib/trace-utils';
 import { buildTraceRecords } from '@/lib/trace-utils';
@@ -11,6 +11,7 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   traceRefs?: string[];
+  timestamp?: number;
 }
 
 interface EnrichedTrace {
@@ -91,6 +92,7 @@ export default function TraceAnalyzer() {
       role: 'user',
       content: input,
       traceRefs: selectedTraces.map(t => `${t.consumerId}-${t.query.substring(0, 20)}`),
+      timestamp: Date.now(),
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -122,7 +124,7 @@ export default function TraceAnalyzer() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: messages.map(m => ({
+          messages: [...messages, userMessage].map(m => ({
             role: m.role,
             content: m.content,
           })),
@@ -138,6 +140,7 @@ export default function TraceAnalyzer() {
       const assistantMessage: Message = {
         role: 'assistant',
         content: data.message,
+        timestamp: Date.now(),
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -174,6 +177,21 @@ export default function TraceAnalyzer() {
     setSelectedTraces(prev => prev.filter(t => t.conversationId !== conversationId));
   };
 
+  const handleClearHistory = () => {
+    if (confirm('Clear all chat history?')) {
+      setMessages([]);
+    }
+  };
+
+  const handleNewConversation = () => {
+    if (messages.length > 0 && confirm('Start a new conversation? Current chat will be cleared.')) {
+      setMessages([]);
+      setSelectedTraces([]);
+    } else if (messages.length === 0) {
+      setSelectedTraces([]);
+    }
+  };
+
   const allGradeRecords = [...gradeData, ...qrGradeData];
   const filteredRecords = allGradeRecords.filter(record => {
     const searchLower = searchTerm.toLowerCase();
@@ -189,6 +207,33 @@ export default function TraceAnalyzer() {
     <div className="flex gap-6 h-[calc(100vh-280px)]">
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col bg-white border border-black/10 rounded-lg overflow-hidden">
+        {/* Chat Header */}
+        {messages.length > 0 && (
+          <div className="px-6 py-3 border-b border-black/10 bg-black/5 flex items-center justify-between">
+            <div className="text-sm font-medium text-black">
+              Conversation ({messages.length} message{messages.length !== 1 ? 's' : ''})
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleNewConversation}
+                className="text-xs px-3 py-1.5 bg-white hover:bg-black/5 border border-black/10 rounded-md transition flex items-center gap-1.5"
+                title="Start new conversation"
+              >
+                <RotateCcw className="w-3 h-3" />
+                New Chat
+              </button>
+              <button
+                onClick={handleClearHistory}
+                className="text-xs px-3 py-1.5 bg-white hover:bg-red-50 border border-black/10 hover:border-red-200 text-red-600 rounded-md transition flex items-center gap-1.5"
+                title="Clear history"
+              >
+                <Trash2 className="w-3 h-3" />
+                Clear
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {messages.length === 0 && (
@@ -225,12 +270,27 @@ export default function TraceAnalyzer() {
                     : 'bg-black/5 text-black border border-black/10'
                 }`}
               >
-                <div className="whitespace-pre-wrap">{message.content}</div>
-                {message.traceRefs && message.traceRefs.length > 0 && (
-                  <div className="mt-2 pt-2 border-t border-white/20 text-xs opacity-70">
-                    Context: {message.traceRefs.length} trace{message.traceRefs.length !== 1 ? 's' : ''}
-                  </div>
-                )}
+                <div className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</div>
+                <div className={`flex items-center gap-2 mt-2 pt-2 border-t text-xs ${
+                  message.role === 'user' ? 'border-white/20 text-white/70' : 'border-black/10 text-black/40'
+                }`}>
+                  {message.timestamp && (
+                    <span>
+                      {new Date(message.timestamp).toLocaleTimeString('en-US', {
+                        hour: 'numeric',
+                        minute: '2-digit'
+                      })}
+                    </span>
+                  )}
+                  {message.traceRefs && message.traceRefs.length > 0 && (
+                    <>
+                      <span>•</span>
+                      <span>
+                        {message.traceRefs.length} trace{message.traceRefs.length !== 1 ? 's' : ''}
+                      </span>
+                    </>
+                  )}
+                </div>
               </div>
               {message.role === 'user' && (
                 <div className="flex-shrink-0 w-8 h-8 bg-black/10 rounded-full flex items-center justify-center">
