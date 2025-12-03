@@ -1271,13 +1271,13 @@ const TraceDashboard = () => {
           if (matchingRewriteIndex !== -1) {
             rewriteId = `trace_${traceIndex}_rewrite_${matchingRewriteIndex}`;
           } else {
-            // Fall back to carousel index if no match found
-            if (carouselIndex > 0 && trace.rewritten_queries.length >= carouselIndex) {
+            // Fall back to carousel index if no match found and carousel index is valid
+            if (trace.rewritten_queries.length > carouselIndex) {
               rewriteId = `trace_${traceIndex}_rewrite_${carouselIndex}`;
             }
           }
-        } else if (carouselIndex > 0 && trace.rewritten_queries && trace.rewritten_queries.length >= carouselIndex) {
-          // No name, use carousel index
+        } else if (trace.rewritten_queries && trace.rewritten_queries.length > carouselIndex) {
+          // No name, use carousel index if it's a valid index
           rewriteId = `trace_${traceIndex}_rewrite_${carouselIndex}`;
         }
 

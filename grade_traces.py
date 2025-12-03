@@ -221,29 +221,52 @@ def extract_grading_tasks(csv_path: str, limit: Optional[int] = None) -> List[Gr
                 # Get store recommendations
                 store_recommendations = trace.get('store_recommendations', [])
 
-                for carousel in store_recommendations:
-                    carousel_idx = carousel.get('carousel_index', 0)
+                for carousel_idx_pos, carousel in enumerate(store_recommendations):
+                    carousel_idx = carousel.get('carousel_index', carousel_idx_pos)
+                    carousel_name = carousel.get('carousel_name') or carousel.get('title')
                     stores = carousel.get('stores', [])
 
+                    # Determine which query to use for this carousel (match name-based logic from GUI)
+                    rewrite_id = f"trace_{trace_idx}_rewrite_0"
+                    query = original_query
+
+                    if carousel_name and rewritten_queries:
+                        # Try to find a rewrite that matches the carousel name (case-insensitive)
+                        matching_idx = -1
+                        for rw_idx, rw in enumerate(rewritten_queries):
+                            rw_query = rw.get('rewritten_query', '')
+                            if rw_query and carousel_name.lower() in rw_query.lower():
+                                matching_idx = rw_idx
+                                break
+
+                        if matching_idx != -1:
+                            rewrite_id = f"trace_{trace_idx}_rewrite_{matching_idx}"
+                            query = rewritten_queries[matching_idx].get('rewritten_query', original_query)
+                        elif carousel_idx_pos < len(queries_to_process):
+                            # Fall back to position-based matching
+                            rewrite_id, query = queries_to_process[carousel_idx_pos]
+                    elif carousel_idx_pos < len(queries_to_process):
+                        # No name, use position-based matching (carousel pos 0 -> rewrite 0, pos 1 -> rewrite 1, etc.)
+                        rewrite_id, query = queries_to_process[carousel_idx_pos]
+
+                    # Grade each store in this carousel with the matched query
                     for store in stores:
-                        # Create a task for each <query, store> pair
-                        for rewrite_id, query in queries_to_process:
-                            task = create_grading_task(
-                                conversation_id=conversation_id,
-                                trace_index=trace_idx,
-                                rewrite_id=rewrite_id,
-                                carousel_index=carousel_idx,
-                                query=query,
-                                original_query=original_query,
-                                store=store
-                            )
+                        task = create_grading_task(
+                            conversation_id=conversation_id,
+                            trace_index=trace_idx,
+                            rewrite_id=rewrite_id,
+                            carousel_index=carousel_idx,
+                            query=query,
+                            original_query=original_query,
+                            store=store
+                        )
 
-                            if task:
-                                all_tasks.append(task)
+                        if task:
+                            all_tasks.append(task)
 
-                                if limit and len(all_tasks) >= limit:
-                                    logger.info(f"Reached limit of {limit} tasks")
-                                    return all_tasks
+                            if limit and len(all_tasks) >= limit:
+                                logger.info(f"Reached limit of {limit} tasks")
+                                return all_tasks
 
         except Exception as e:
             logger.warning(f"Failed to process conversation {idx}: {e}")
