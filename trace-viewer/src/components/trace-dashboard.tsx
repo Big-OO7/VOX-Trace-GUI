@@ -1258,10 +1258,26 @@ const TraceDashboard = () => {
     const enrichedTraces = selectedRecord.payload.traces?.map((trace, traceIndex) => {
       const enrichedCarousels = trace.store_recommendations?.map((carousel, carouselIndex) => {
         // Determine rewrite_id for this carousel
-        // For carousel_index 0, use "trace_{traceIndex}_rewrite_0" (original query)
-        // For carousel_index > 0, use the corresponding rewrite
+        // If carousel has a name, match it to the corresponding rewritten query (case-insensitive)
         let rewriteId = `trace_${traceIndex}_rewrite_0`;
-        if (carouselIndex > 0 && trace.rewritten_queries && trace.rewritten_queries.length >= carouselIndex) {
+        const carouselName = (carousel as any).carousel_name || (carousel as any).title;
+
+        if (carouselName && trace.rewritten_queries && trace.rewritten_queries.length > 0) {
+          // Try to find a rewrite that matches the carousel name (case-insensitive)
+          const matchingRewriteIndex = trace.rewritten_queries.findIndex(
+            (rewrite) => rewrite.rewritten_query.toLowerCase().includes(carouselName.toLowerCase())
+          );
+
+          if (matchingRewriteIndex !== -1) {
+            rewriteId = `trace_${traceIndex}_rewrite_${matchingRewriteIndex}`;
+          } else {
+            // Fall back to carousel index if no match found
+            if (carouselIndex > 0 && trace.rewritten_queries.length >= carouselIndex) {
+              rewriteId = `trace_${traceIndex}_rewrite_${carouselIndex}`;
+            }
+          }
+        } else if (carouselIndex > 0 && trace.rewritten_queries && trace.rewritten_queries.length >= carouselIndex) {
+          // No name, use carousel index
           rewriteId = `trace_${traceIndex}_rewrite_${carouselIndex}`;
         }
 
@@ -1903,9 +1919,41 @@ const TraceDashboard = () => {
                           {/* Store Recommendations */}
                           {gradingMode !== "fuzzy" && trace.store_recommendations && trace.store_recommendations.length > 0 && (
                             <div className="mt-4 space-y-4">
-                              {trace.store_recommendations
-                                .sort((a, b) => (a.carousel_index ?? 0) - (b.carousel_index ?? 0))
-                                .map((carousel, carIdx) => (
+                              {(() => {
+                                const sortedCarousels = trace.store_recommendations.sort((a, b) => (a.carousel_index ?? 0) - (b.carousel_index ?? 0));
+                                const allUnnamed = sortedCarousels.every(c => !(c as any).carousel_name && !(c as any).title);
+
+                                if (allUnnamed) {
+                                  // Merge all carousels into one
+                                  const allStores = sortedCarousels.flatMap(c => c.stores ?? []);
+                                  return (
+                                    <div key={`carousel-${traceIdx}-merged`} className="rounded-lg border border-black/5 bg-black/[0.01] p-4">
+                                      <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-black">
+                                        <span className="rounded bg-black/10 px-2 py-0.5">
+                                          Store Recommendations
+                                        </span>
+                                        <span className="text-black/40">
+                                          {allStores.length} stores
+                                        </span>
+                                      </p>
+                                      <div className="overflow-x-auto">
+                                        <div className="flex gap-4 pb-2" style={{ minWidth: 'min-content' }}>
+                                          {allStores.map((store, storeIdx) => (
+                                            <div key={`${traceIdx}-merged-${storeIdx}-${store.business_id}`} className="w-80 flex-shrink-0">
+                                              <StoreCard
+                                                store={store}
+                                                onDoubleClick={setSelectedStoreDetail}
+                                              />
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                }
+
+                                // Render carousels separately if any have names
+                                return sortedCarousels.map((carousel, carIdx) => (
                                   <div key={`carousel-${traceIdx}-${carIdx}`} className="rounded-lg border border-black/5 bg-black/[0.01] p-4">
                                     <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-black">
                                       <span className="rounded bg-black/10 px-2 py-0.5">
@@ -1928,7 +1976,8 @@ const TraceDashboard = () => {
                                       </div>
                                     </div>
                                   </div>
-                                ))}
+                                ));
+                              })()}
                             </div>
                           )}
 
@@ -2012,9 +2061,41 @@ const TraceDashboard = () => {
 
                       {gradingMode !== "fuzzy" && activeTrace.store_recommendations && activeTrace.store_recommendations.length > 0 && (
                         <div className="space-y-4">
-                          {activeTrace.store_recommendations
-                            .sort((a, b) => (a.carousel_index ?? 0) - (b.carousel_index ?? 0))
-                            .map((carousel, carIdx) => (
+                          {(() => {
+                            const sortedCarousels = activeTrace.store_recommendations.sort((a, b) => (a.carousel_index ?? 0) - (b.carousel_index ?? 0));
+                            const allUnnamed = sortedCarousels.every(c => !(c as any).carousel_name && !(c as any).title);
+
+                            if (allUnnamed) {
+                              // Merge all carousels into one
+                              const allStores = sortedCarousels.flatMap(c => c.stores ?? []);
+                              return (
+                                <div key={`carousel-merged`} className="rounded-lg border border-black/5 bg-black/[0.01] p-4">
+                                  <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-black">
+                                    <span className="rounded bg-black/10 px-2 py-0.5">
+                                      Store Recommendations
+                                    </span>
+                                    <span className="text-black/40">
+                                      {allStores.length} stores
+                                    </span>
+                                  </p>
+                                  <div className="overflow-x-auto">
+                                    <div className="flex gap-4 pb-2" style={{ minWidth: 'min-content' }}>
+                                      {allStores.map((store, storeIdx) => (
+                                        <div key={`merged-${storeIdx}-${store.business_id}`} className="w-80 flex-shrink-0">
+                                          <StoreCard
+                                            store={store}
+                                            onDoubleClick={setSelectedStoreDetail}
+                                          />
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            }
+
+                            // Render carousels separately if any have names
+                            return sortedCarousels.map((carousel, carIdx) => (
                               <div key={`carousel-${carIdx}`} className="rounded-lg border border-black/5 bg-black/[0.01] p-4">
                                 <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-black">
                                   <span className="rounded bg-black/10 px-2 py-0.5">
@@ -2037,7 +2118,8 @@ const TraceDashboard = () => {
                                   </div>
                                 </div>
                               </div>
-                            ))}
+                            ));
+                          })()}
                         </div>
                       )}
                     </div>
