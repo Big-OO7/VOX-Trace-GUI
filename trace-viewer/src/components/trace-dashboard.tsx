@@ -1265,7 +1265,7 @@ const TraceDashboard = () => {
         if (carouselName && trace.rewritten_queries && trace.rewritten_queries.length > 0) {
           // Try to find a rewrite that matches the carousel name (case-insensitive)
           const matchingRewriteIndex = trace.rewritten_queries.findIndex(
-            (rewrite) => rewrite.rewritten_query.toLowerCase().includes(carouselName.toLowerCase())
+            (rewrite) => rewrite.rewritten_query?.toLowerCase().includes(carouselName.toLowerCase())
           );
 
           if (matchingRewriteIndex !== -1) {
